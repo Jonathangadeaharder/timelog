@@ -133,6 +133,19 @@ jobs:
       - name: Run mutation tests
         run: uv run mutmut run
 
+  sonarcloud:
+    name: SonarCloud Code Analysis
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   required-checks:
     name: Required Checks (Merge)
     runs-on: ubuntu-latest
@@ -143,16 +156,22 @@ jobs:
       - secret-scanning
       - codeql
       - mutation-test
+      - sonarcloud
     if: always()
     steps:
       - name: Verify all jobs passed
         run: |
-          if [ "${{ needs.repo-hygiene.result }}" != "success" ] || \
-             [ "${{ needs.python-quality.result }}" != "success" ] || \
-             [ "${{ needs.dependency-scan.result }}" != "success" ] || \
-             [ "${{ needs.secret-scanning.result }}" != "success" ] || \
-             [ "${{ needs.codeql.result }}" != "success" ] || \
-             [ "${{ needs.mutation-test.result }}" != "success" ]; then
+          FAILED=0
+          [ "${{ needs.repo-hygiene.result }}" != "success" ] && FAILED=1
+          [ "${{ needs.python-quality.result }}" != "success" ] && FAILED=1
+          [ "${{ needs.dependency-scan.result }}" != "success" ] && FAILED=1
+          [ "${{ needs.secret-scanning.result }}" != "success" ] && FAILED=1
+          [ "${{ needs.codeql.result }}" != "success" ] && FAILED=1
+          [ "${{ needs.mutation-test.result }}" != "success" ] && FAILED=1
+          if [ "${{ needs.sonarcloud.result }}" != "success" ] && [ "${{ needs.sonarcloud.result }}" != "skipped" ]; then
+            FAILED=1
+          fi
+          if [ "$FAILED" -eq 1 ]; then
             echo "One or more merge gate jobs failed."
             exit 1
           fi
