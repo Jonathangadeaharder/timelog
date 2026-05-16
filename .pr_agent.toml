@@ -1,0 +1,18 @@
+[config]
+model = "openai/qwen3.6-27b-mlx"
+fallback_models = []
+use_fallback_for_diff = false
+
+[github]
+action_auto_review = false
+action_auto_describe = false
+action_auto_improve = false
+
+[git]
+provider = "github"
+
+[pr_reviewer]
+require_all_thresholds_to_approve = false
+require_score_threshold_to_approve = false
+approval_score = 7
+max_suggestions = 10

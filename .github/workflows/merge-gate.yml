@@ -1,0 +1,159 @@
+name: Merge Gate
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: merge-gate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  repo-hygiene:
+    name: Repo Hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for iCloud sync conflicts
+        run: |
+          if find . -path ./.venv -prune -o -path ./.git -prune -o -path ./node_modules -prune -o -name "* [0-9]*" -print | grep -q .; then
+            echo "::error::iCloud sync conflicts detected"
+            find . -path ./.venv -prune -o -path ./.git -prune -o -path ./node_modules -prune -o -name "* [0-9]*" -print
+            exit 1
+          fi
+
+  python-quality:
+    name: Python Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Pyright
+        run: uv run pyright
+
+      - name: Tests with coverage gate
+        run: uv run pytest --cov --cov-branch --cov-fail-under=90
+
+  dependency-scan:
+    name: Dependency Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
+
+  secret-scanning:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  codeql:
+    name: CodeQL Security
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      matrix:
+        language: [python]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  mutation-test:
+    name: Mutation Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run mutation tests
+        run: uv run mutmut run
+
+  required-checks:
+    name: Required Checks (Merge)
+    runs-on: ubuntu-latest
+    needs:
+      - repo-hygiene
+      - python-quality
+      - dependency-scan
+      - secret-scanning
+      - codeql
+      - mutation-test
+    if: always()
+    steps:
+      - name: Verify all jobs passed
+        run: |
+          if [ "${{ needs.repo-hygiene.result }}" != "success" ] || \
+             [ "${{ needs.python-quality.result }}" != "success" ] || \
+             [ "${{ needs.dependency-scan.result }}" != "success" ] || \
+             [ "${{ needs.secret-scanning.result }}" != "success" ] || \
+             [ "${{ needs.codeql.result }}" != "success" ] || \
+             [ "${{ needs.mutation-test.result }}" != "success" ]; then
+            echo "One or more merge gate jobs failed."
+            exit 1
+          fi
+          echo "All merge gate jobs passed."

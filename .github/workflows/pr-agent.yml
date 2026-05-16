@@ -1,0 +1,28 @@
+name: PR-Agent
+
+on:
+  issue_comment:
+    types:
+      - created
+      - edited
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  pr_agent:
+    if: vars.ENABLE_PR_AGENT == 'true' && github.event.issue.pull_request != null
+    runs-on: self-hosted
+    steps:
+      - name: PR-Agent
+        uses: Codium-ai/pr-agent@main
+        env:
+          OPENAI.KEY: ${{ secrets.LM_STUDIO_API_KEY }}
+          OPENAI.API_BASE: http://localhost:1234/v1
+          CONFIG.MODEL: openai/qwen3.6-27b-mlx
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB.ACTION_CONFIG.AUTO_DESCRIBE: false
+          GITHUB.ACTION_CONFIG.AUTO_REVIEW: false
+          GITHUB.ACTION_CONFIG.AUTO_IMPROVE: false

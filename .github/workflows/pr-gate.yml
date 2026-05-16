@@ -1,0 +1,110 @@
+name: PR Gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repo-hygiene:
+    name: Repo Hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for iCloud sync conflicts
+        run: |
+          if find . -path ./.venv -prune -o -path ./.git -prune -o -path ./node_modules -prune -o -name "* [0-9]*" -print | grep -q .; then
+            echo "::error::iCloud sync conflicts detected"
+            find . -path ./.venv -prune -o -path ./.git -prune -o -path ./node_modules -prune -o -name "* [0-9]*" -print
+            exit 1
+          fi
+
+  python-quality:
+    name: Python Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Pyright
+        run: uv run pyright
+
+      - name: Tests with coverage gate
+        run: uv run pytest --cov --cov-branch --cov-fail-under=90
+
+  dependency-scan:
+    name: Dependency Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
+
+  secret-scanning:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  required-checks:
+    name: Required Checks (PR)
+    runs-on: ubuntu-latest
+    needs:
+      - repo-hygiene
+      - python-quality
+      - dependency-scan
+      - secret-scanning
+    if: always()
+    steps:
+      - name: Verify all jobs passed
+        run: |
+          if [ "${{ needs.repo-hygiene.result }}" != "success" ] || \
+             [ "${{ needs.python-quality.result }}" != "success" ] || \
+             [ "${{ needs.dependency-scan.result }}" != "success" ] || \
+             [ "${{ needs.secret-scanning.result }}" != "success" ]; then
+            echo "One or more PR gate jobs failed."
+            echo "repo-hygiene: ${{ needs.repo-hygiene.result }}"
+            echo "python-quality: ${{ needs.python-quality.result }}"
+            echo "dependency-scan: ${{ needs.dependency-scan.result }}"
+            echo "secret-scanning: ${{ needs.secret-scanning.result }}"
+            exit 1
+          fi
+          echo "All PR gate jobs passed."
