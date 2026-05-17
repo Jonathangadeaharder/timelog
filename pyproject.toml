@@ -31,7 +31,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=main --cov=daemon --cov-branch --cov-report=term-missing"
+addopts = "--cov=main --cov=daemon --cov-branch --cov-report=term-missing --cov-report=xml"
 testpaths = ["tests"]
 
 [tool.coverage.run]

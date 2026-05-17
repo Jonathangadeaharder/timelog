@@ -5,9 +5,24 @@ build/
 dist/
 wheels/
 *.egg-info
+timelog.egg-info/
 
 # Virtual environments
 .venv
+.venv/
 
 # Mutation testing artifacts
 mutants/
+.mutmut-cache
+
+# Coverage reports
+coverage.xml
+.coverage
+.coverage.*
+
+# Cache directories
+.ruff_cache/
+.pytest_cache/
+
+# macOS
+.DS_Store
