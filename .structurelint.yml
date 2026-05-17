@@ -1,0 +1,46 @@
+root: true
+
+exclude:
+  - __pycache__/**
+  - .git/**
+  - .venv/**
+  - "*.egg-info/**"
+  - .pytest_cache/**
+  - .ruff_cache/**
+  - .mypy_cache/**
+  - dist/**
+
+rules:
+  max-depth:
+    max: 5
+    exemptions:
+      - ".git/**"
+      - "**/__pycache__/**"
+
+  max-files-in-dir:
+    max: 30
+
+  max-subdirs:
+    max: 15
+
+  file-existence:
+    "README.md":
+      rule: "exists:1"
+
+  disallowed-patterns:
+    - "*.tmp"
+    - "*.bak"
+    - ".DS_Store"
+    - "*.pyc"
+    - "*.pyo"
+
+  github-workflows:
+    global:
+      disallow-command-masking: true
+      disallow-continue-on-error-on-quality: true
+      require-required-checks-aggregator: true
+    python:
+      max-suppressions: 20
+      coverage:
+        branches: 90
+        lines: 80
