@@ -31,7 +31,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=main --cov=daemon --cov-branch --cov-report=term-missing --cov-report=xml"
+addopts = "--cov=main --cov=daemon --cov-branch --cov-report=term-missing --cov-report=xml --junitxml=test-results.xml"
 testpaths = ["tests"]
 
 [tool.coverage.run]
@@ -40,6 +40,7 @@ source = ["main", "daemon"]
 
 [tool.coverage.report]
 show_missing = true
+fail_under = 85
 
 [tool.mutmut]
 paths_to_mutate = ["main.py", "daemon.py"]

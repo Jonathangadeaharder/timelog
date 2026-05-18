@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import math
+import random
 import sys
 import time
 from datetime import datetime
@@ -157,7 +158,7 @@ class Daemon:
             self.current_activity = "background"
         else:
             self.current_activity = self.prompt_activity(context="morning")
-            
+
         self.activity_start = time.time()
 
         console.print(
@@ -175,8 +176,6 @@ class Daemon:
 
     def _wellness_tip(self) -> str:
         """Pick a random wellness reminder."""
-        import random
-
         tips = [
             "💧 Grab a glass of water",
             "🚶 Stand up and stretch for 30 seconds",
@@ -274,7 +273,9 @@ class Daemon:
                     )
 
                     if self.headless:
-                        console.print("   [dim]Headless: silence threshold reached, continuing...[/dim]")
+                        console.print(
+                            "   [dim]Headless: silence threshold reached, continuing...[/dim]"
+                        )
                         self.silence_start = None
                         continue
 

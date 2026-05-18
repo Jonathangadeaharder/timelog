@@ -1,7 +1,7 @@
 root: true
 
 exclude:
-  - __pycache__/**
+  - "**/__pycache__/**"
   - .git/**
   - .venv/**
   - "*.egg-info/**"
@@ -11,6 +11,10 @@ exclude:
   - dist/**
 
 rules:
+  deploy-action: false
+  mandatory-linters:
+    - structurelint
+    - pytest-linter
   max-depth:
     max: 5
     exemptions:
@@ -34,13 +38,4 @@ rules:
     - "*.pyc"
     - "*.pyo"
 
-  github-workflows:
-    global:
-      disallow-command-masking: true
-      disallow-continue-on-error-on-quality: true
-      require-required-checks-aggregator: true
-    python:
-      max-suppressions: 20
-      coverage:
-        branches: 90
-        lines: 80
+

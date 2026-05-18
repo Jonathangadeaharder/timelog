@@ -414,7 +414,10 @@ class TestMainBlock:
 
 class TestHeadlessMode:
     def test_run_headless_sets_flag_and_activity(self, daemon: Daemon):
-        daemon.audio.open.return_value = MagicMock()
+        mock_audio = MagicMock()
+        mock_stream = MagicMock()
+        mock_audio.open.return_value = mock_stream
+        daemon.audio = mock_audio
         with patch.object(daemon, "_monitor_loop"):
             daemon.run(headless=True)
             assert daemon.headless is True
@@ -436,11 +439,20 @@ class TestHeadlessMode:
         daemon.last_speech_time = 100.0
         daemon.last_checkin = 500.0
 
-        # mock low energy data
         low_energy_data = b"\x00\x00" * (CHUNK // 2)
 
+        # stream.read raises after 2 calls (3rd call raises) to trigger
+        # time.sleep -> stop loop before silence_start gets re-assigned
+        read_calls: list[int] = []
+
+        def mock_read(*args: object, **kwargs: object) -> bytes:
+            read_calls.append(1)
+            if len(read_calls) > 2:
+                raise Exception("Simulated stream end")
+            return low_energy_data
+
         mock_stream = MagicMock()
-        mock_stream.read.return_value = low_energy_data
+        mock_stream.read.side_effect = mock_read
         daemon.stream = mock_stream
 
         with (
@@ -448,31 +460,15 @@ class TestHeadlessMode:
             patch("click.prompt") as mock_prompt,
             patch("daemon.SILENCE_THRESHOLD_SEC", 300),
         ):
-            # mock_time.time will be called in loop.
-            # We want to trigger silence_duration >= 300
-            # loop 1: now=400, silence_start=400
-            # loop 2: now=701, silence_duration=301
-            mock_time.time.side_effect = [400.0, 701.0, 702.0]
+            # iter 0: last_checkin = time.time() -> 400.0
+            # iter 1: now = time.time() -> 400.0 (first loop iteration)
+            # iter 2: now = time.time() -> 701.0 (triggers silence threshold)
+            mock_time.time.side_effect = [400.0, 400.0, 701.0]
 
-            def stop_daemon(*args, **kwargs):
-                daemon.running = False
-                return low_energy_data
-
-            mock_stream.read.return_value = low_energy_data
-
-            # Use a generator to avoid StopIteration
-            def time_gen():
-                yield 400.0 # iter 1: checkin
-                yield 400.0 # iter 1: energy
-                yield 701.0 # iter 2: checkin
-                yield 701.0 # iter 2: energy -> triggers reset
-                while True:
-                    yield 800.0
-
-            mock_time.time.side_effect = time_gen()
-
-            # Stop the loop by setting running=False when time.sleep is called
-            with patch("daemon.time.sleep", side_effect=lambda x: setattr(daemon, 'running', False)):
+            with patch(
+                "daemon.time.sleep",
+                side_effect=lambda x: setattr(daemon, "running", False),
+            ):
                 daemon._monitor_loop()
             mock_prompt.assert_not_called()
             assert daemon.silence_start is None
