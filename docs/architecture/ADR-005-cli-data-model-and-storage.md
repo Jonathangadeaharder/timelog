@@ -1,7 +1,22 @@
-# ADR-005: CLI Data Model & Storage
-
-**Status:** Accepted  
-**Date:** 2026-05-17  
+---
+id: ADR-005
+kind: adr
+title: CLI Data Model & Storage
+status: draft
+date: 2026-05-17T00:00:00.000Z
+authors: []
+reviewers: []
+tags: []
+supersedes: []
+superseded_by: []
+depends_on: []
+blocks: []
+implements: []
+related: []
+external: []
+project: timelog
+checksum: 7696aeb5078d3d707499b77d7df8301ce11d4f2a622cf807acb739a93e492ac1
+---
 
 ## Context
 

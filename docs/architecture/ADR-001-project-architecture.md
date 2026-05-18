@@ -1,7 +1,22 @@
-# ADR-001: Project Architecture
-
-**Status:** Accepted  
-**Date:** 2026-05-17  
+---
+id: ADR-001
+kind: adr
+title: Project Architecture
+status: draft
+date: 2026-05-17T00:00:00.000Z
+authors: []
+reviewers: []
+tags: []
+supersedes: []
+superseded_by: []
+depends_on: []
+blocks: []
+implements: []
+related: []
+external: []
+project: timelog
+checksum: e2c81dd9971dbdbbebbe1c0a33c7aa8cef8139178eebfad74997bca7bbce1f4b
+---
 
 ## Context
 

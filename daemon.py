@@ -39,6 +39,7 @@ class Daemon:
         self.audio = pyaudio.PyAudio()
         self.stream = None
         self.running = False
+        self.headless = False
 
         # Timing state
         self.current_activity: str | None = None
@@ -138,9 +139,10 @@ class Daemon:
         m, s = divmod(rem, 60)
         return f"{h:02d}:{m:02d}:{s:02d}"
 
-    def run(self):
+    def run(self, headless: bool = False):
         """Main daemon loop."""
         self.running = True
+        self.headless = headless
         self.start_stream()
 
         console.print(
@@ -151,7 +153,11 @@ class Daemon:
         )
 
         # Morning prompt — what are you doing?
-        self.current_activity = self.prompt_activity(context="morning")
+        if headless:
+            self.current_activity = "background"
+        else:
+            self.current_activity = self.prompt_activity(context="morning")
+            
         self.activity_start = time.time()
 
         console.print(
@@ -195,6 +201,11 @@ class Daemon:
                 f"   Currently: [bold]{self.current_activity}[/bold] "
                 f"({self._fmt(elapsed)})"
             )
+
+        if self.headless:
+            console.print("   [dim]Headless check-in: continuing active task.[/dim]")
+            self.last_checkin = time.time()
+            return
 
         response = click.prompt(
             "   Press [Enter] to continue, or type new task",
@@ -261,6 +272,11 @@ class Daemon:
                     console.print(
                         f"\n[bold]🔇 No speech for {self._fmt(silence_duration)}.[/bold]"
                     )
+
+                    if self.headless:
+                        console.print("   [dim]Headless: silence threshold reached, continuing...[/dim]")
+                        self.silence_start = None
+                        continue
 
                     # Log the previous activity
                     self.log_entry()
@@ -345,7 +361,12 @@ def daemon_cli():
     show_default=True,
     help="Seconds between periodic check-ins (default: 30 min).",
 )
-def start(silence: int, energy: int, checkin: int):
+@click.option(
+    "--headless",
+    is_flag=True,
+    help="Run without initial prompt (for background daemons).",
+)
+def start(silence: int, energy: int, checkin: int, headless: bool):
     """Start the daemon. Monitors mic for speech to auto-track time."""
     global SILENCE_THRESHOLD_SEC, SPEECH_ENERGY_MIN, CHECKIN_INTERVAL_SEC
 
@@ -357,7 +378,7 @@ def start(silence: int, energy: int, checkin: int):
     CHECKIN_INTERVAL_SEC = checkin
 
     daemon = Daemon()
-    daemon.run()
+    daemon.run(headless=headless)
 
 
 @daemon_cli.command()

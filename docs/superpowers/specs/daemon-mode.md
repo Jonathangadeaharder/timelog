@@ -1,4 +1,21 @@
-# SPEC: Daemon Mode — Automatic Speech Detection Time Tracking
+---
+id: SPEC-DAEMON-MODE
+kind: spec
+title: 'SPEC: Daemon Mode — Automatic Speech Detection Time Tracking'
+status: draft
+authors: []
+reviewers: []
+tags: []
+supersedes: []
+superseded_by: []
+depends_on: []
+blocks: []
+implements: []
+related: []
+external: []
+project: timelog
+checksum: 178214ee5f6fd5c5b7776df84a38e8b1ed57e33dfb1ce2b2499c1c12ae7f7fa0
+---
 
 ## Overview
 

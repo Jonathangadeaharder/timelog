@@ -1,7 +1,22 @@
-# ADR-004: Testing Strategy
-
-**Status:** Accepted  
-**Date:** 2026-05-17  
+---
+id: ADR-004
+kind: adr
+title: Testing Strategy
+status: draft
+date: 2026-05-17T00:00:00.000Z
+authors: []
+reviewers: []
+tags: []
+supersedes: []
+superseded_by: []
+depends_on: []
+blocks: []
+implements: []
+related: []
+external: []
+project: timelog
+checksum: 1b3b5360aa9cc61afeb5c826401f3efda066d6dbd18a272df6bb2b9b68289a35
+---
 
 ## Context
 

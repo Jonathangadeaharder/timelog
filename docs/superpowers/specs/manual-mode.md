@@ -1,4 +1,21 @@
-# SPEC: Manual Mode — CLI Time Tracking
+---
+id: SPEC-MANUAL-MODE
+kind: spec
+title: 'SPEC: Manual Mode — CLI Time Tracking'
+status: draft
+authors: []
+reviewers: []
+tags: []
+supersedes: []
+superseded_by: []
+depends_on: []
+blocks: []
+implements: []
+related: []
+external: []
+project: timelog
+checksum: 68bc0278faf58ff6ef8948635cfd405ec40b866a8e54f0dfd544461942f8bf6f
+---
 
 ## Overview
 

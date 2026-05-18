@@ -1,7 +1,22 @@
-# ADR-002: Toolchain
-
-**Status:** Accepted  
-**Date:** 2026-05-17  
+---
+id: ADR-002
+kind: adr
+title: Toolchain
+status: draft
+date: 2026-05-17T00:00:00.000Z
+authors: []
+reviewers: []
+tags: []
+supersedes: []
+superseded_by: []
+depends_on: []
+blocks: []
+implements: []
+related: []
+external: []
+project: timelog
+checksum: a16a70833967cf867abd2bc83f427a080af167b104fec1743086ebd5809b7e6c
+---
 
 ## Context
 

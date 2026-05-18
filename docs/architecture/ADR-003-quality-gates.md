@@ -1,7 +1,22 @@
-# ADR-003: Quality Gates
-
-**Status:** Accepted  
-**Date:** 2026-05-17  
+---
+id: ADR-003
+kind: adr
+title: Quality Gates
+status: draft
+date: 2026-05-17T00:00:00.000Z
+authors: []
+reviewers: []
+tags: []
+supersedes: []
+superseded_by: []
+depends_on: []
+blocks: []
+implements: []
+related: []
+external: []
+project: timelog
+checksum: 5961d5927d1771636b9e645bc60b356a03d9396c6ed70fd8337ab1a47365d782
+---
 
 ## Context
 
