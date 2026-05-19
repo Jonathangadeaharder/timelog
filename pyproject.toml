@@ -17,6 +17,10 @@ timelog = "main:cli"
 [tool.setuptools]
 py-modules = ["main", "daemon"]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [tool.uv]
 package = true
 
