@@ -2,6 +2,10 @@ name: PR Gate
 
 on:
   pull_request:
+    branches:
+      - main
+      - master
+      - feat/quality-gates
   workflow_dispatch:
 
 permissions:

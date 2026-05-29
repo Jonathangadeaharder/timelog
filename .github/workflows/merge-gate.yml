@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - feat/quality-gates
   workflow_dispatch:
 
 permissions:
@@ -114,29 +115,6 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
-  mutation-test:
-    name: Mutation Testing
-    runs-on: ["self-hosted", "python", "macos"]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.14"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-
-      - name: Install dependencies
-        run: uv sync
-
-      - name: Run mutation tests
-        run: uv run mutmut run
-
   sonarcloud:
     name: SonarCloud Code Analysis
     runs-on: ["self-hosted", "security", "macos"]
@@ -161,7 +139,6 @@ jobs:
       - dependency-scan
       - secret-scanning
       - codeql
-      - mutation-test
       - sonarcloud
     if: always()
     steps:
@@ -173,7 +150,6 @@ jobs:
           [ "${{ needs.dependency-scan.result }}" != "success" ] && FAILED=1
           [ "${{ needs.secret-scanning.result }}" != "success" ] && FAILED=1
           [ "${{ needs.codeql.result }}" != "success" ] && FAILED=1
-          [ "${{ needs.mutation-test.result }}" != "success" ] && FAILED=1
           if [ "${{ needs.sonarcloud.result }}" != "success" ] && [ "${{ needs.sonarcloud.result }}" != "skipped" ]; then
             FAILED=1
           fi

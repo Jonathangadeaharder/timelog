@@ -35,7 +35,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=main --cov=daemon --cov-branch --cov-report=term-missing --cov-report=xml --junitxml=test-results.xml"
+addopts = "--cov=main --cov=daemon --cov-branch --cov-fail-under=90 --cov-report=term-missing --cov-report=xml --junitxml=test-results.xml"
 testpaths = ["tests"]
 
 [tool.coverage.run]
@@ -52,3 +52,16 @@ tests_dir = ["tests"]
 backup = false
 runner = "uv run pytest"
 dict_synonyms = ["project", "task", "current_activity"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "ARG", "PL"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+[tool.vulture]
+paths = ["src/"]
