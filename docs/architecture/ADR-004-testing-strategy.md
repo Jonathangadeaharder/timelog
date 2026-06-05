@@ -32,26 +32,31 @@ Need a testing approach that provides high confidence in CLI behavior, storage c
 
 ### Test Organization
 
-Tests are grouped by module and feature using classes:
+Tests are organized by module. `test_daemon.py` uses classes for grouping; `test_main.py` uses flat functions with comment separators:
 
-```
+```text
 tests/
   conftest.py          # Shared fixtures (runner, data_dir, sample_entries)
-  test_main.py         # Manual CLI tests
-    - Storage helpers  # _load, _save, _load_active, _save_active, _clear_active
-    - Format helpers   # _fmt, _elapsed
-    - CLI commands     # start, stop, now, log, report, export
-  test_daemon.py       # Daemon tests
-    - TestDaemonInit   # Constructor state
-    - TestStartStopStream  # Audio stream lifecycle
-    - TestRmsEnergy    # Energy calculation correctness
-    - TestPromptActivity  # User prompt behavior
-    - TestLogEntry     # Entry persistence
-    - TestPeriodicCheckin  # 30-min check-in logic
-    - TestMonitorLoop  # Speech/silence detection loop
-    - TestDaemonCli    # Daemon subcommands (check, status)
-    - TestRun          # Full daemon lifecycle
-    - TestDaemonStartCli  # Daemon start with mic failure
+  test_main.py         # Manual CLI tests (flat functions)
+    # storage helpers    _load, _save, _load_active, _save_active, _clear_active
+    # format helpers     _fmt, _elapsed
+    # CLI commands       start, stop, now, log, report, export
+  test_daemon.py       # Daemon tests (class-based)
+    - TestDaemonInit          # Constructor state
+    - TestStartStopStream     # Audio stream lifecycle
+    - TestRmsEnergy           # Energy calculation correctness
+    - TestPromptActivity      # User prompt behavior
+    - TestLogEntry            # Entry persistence
+    - TestFormat              # Duration formatting
+    - TestWellnessTip         # Randomized wellness tips
+    - TestPeriodicCheckin     # 30-min check-in logic
+    - TestCheckMic            # Microphone availability
+    - TestMonitorLoop         # Speech/silence detection loop
+    - TestDaemonCli           # Daemon subcommands (check, status)
+    - TestRun                 # Full daemon lifecycle
+    - TestDaemonStartCli      # Daemon start with mic failure
+    - TestMainBlock           # Callable smoke test
+    - TestHeadlessMode        # Headless daemon behavior
 ```
 
 ### Key Patterns
@@ -61,6 +66,7 @@ tests/
 - **`freezegun.freeze_time`** — Deterministic time for elapsed/duration calculations
 - **`unittest.mock.MagicMock`** — Mock PyAudio for daemon tests (no mic needed in CI)
 - **`pytest.approx`** — Float tolerance for elapsed seconds
+- **`pytest-socket`** — Network isolation (imported in conftest, gracefully skipped if not installed)
 
 ### Mutation Testing: `mutmut`
 

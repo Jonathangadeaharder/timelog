@@ -83,6 +83,7 @@ uv run timelog daemon check
 |---------|-------------|
 | `daemon start` | Start the speech-detection daemon |
 | `daemon check` | Verify microphone is available |
+| `daemon status` | Show current daemon state |
 
 ### Daemon options
 
@@ -91,7 +92,10 @@ uv run timelog daemon check
 | `--silence, -s` | 300 (5 min) | Silence duration before prompting |
 | `--energy, -e` | 800 | Minimum RMS energy to detect speech |
 | `--checkin, -c` | 1800 (30 min) | Interval between wellness check-ins |
+| `--headless` | off | Run without initial prompt (for background daemons) |
 
 ## Storage
 
-Entries are stored as JSON in `~/.local/share/timelog/entries.json`.
+Entries are stored as JSON in the XDG application data directory (resolved via `click.get_app_dir("timelog")`):
+- **macOS**: `~/Library/Application Support/timelog/entries.json`
+- **Linux**: `~/.local/share/timelog/entries.json`

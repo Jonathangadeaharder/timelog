@@ -1,5 +1,5 @@
 [config]
-model = "openai/qwen3.6-27b-mlx"
+model = "openai/glm-5.1"
 fallback_models = []
 use_fallback_for_diff = false
 

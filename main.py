@@ -99,7 +99,7 @@ def start(project: str, task: str | None):
             f"[yellow]⚠ Already tracking [bold]{active['project']}[/bold]"
             f"{f' → {active.get("task")}' if active.get('task') else ''}[/yellow]\n"
             f"   Started [dim]{active['start']}[/dim] · elapsed [cyan]{_fmt(_elapsed(active['start']))}[/cyan]\n"
-            f"   Run [bold]timelog stop[/bold] first, or use [bold]--force[/bold] to overwrite.",
+            f"   Run [bold]timelog stop[/bold] first.",
         )
         return
 

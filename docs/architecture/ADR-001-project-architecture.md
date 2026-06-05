@@ -33,11 +33,11 @@ Single-package Python project managed by `uv`. Two modules:
 
 ### Storage
 
-Flat JSON files in XDG application data directory (`~/.local/share/timelog/`). No database dependency. Entries are an append-only array of objects with project/task/timestamps/duration.
+Flat JSON files in XDG application data directory (resolved via `click.get_app_dir("timelog")`; `~/.local/share/timelog/` on Linux, `~/Library/Application Support/timelog/` on macOS). No database dependency. Entries are an append-only array of objects with project/task/timestamps/duration.
 
 ### Distribution
 
-Published as `py-modules` (not a package with `src/` layout) via setuptools, installed as a Click console script entry point `timelog = main:cli`.
+Published as `py-modules` (not a package with `src/` layout) via hatchling, installed as a Click console script entry point `timelog = main:cli`.
 
 ### Dependencies
 

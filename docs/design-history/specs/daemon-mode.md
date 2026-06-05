@@ -50,6 +50,7 @@ Daemon mode monitors microphone audio energy to detect speech/silence patterns. 
 | `--silence` / `-s` | 300s (5 min) | Silence before "what's next?" prompt |
 | `--energy` / `-e` | 800 RMS | Minimum energy to classify as speech |
 | `--checkin` / `-c` | 1800s (30 min) | Periodic wellness/task check-in |
+| `--headless` | off | Run without initial prompt (for background daemons) |
 
 ## States
 
@@ -86,3 +87,5 @@ On KeyboardInterrupt, log current activity before stopping.
 - **Stream errors**: Caught and skipped (sleep 100ms, retry)
 - **Close-to-threshold silence**: Countdown printed every ~10s in the final 60s before prompt
 - **Empty prompt**: Defaults to "unknown" activity string
+- **Headless mode**: `--headless` flag skips morning prompt (defaults activity to "background"), skips check-in/silence prompts (continues current task automatically)
+- **Daemon status**: `daemon status` subcommand reads `daemon_state.json` and displays current state; the daemon loop never writes/updates this file

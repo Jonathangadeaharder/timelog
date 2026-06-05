@@ -34,12 +34,14 @@ Need a consistent Python toolchain for package management, linting, formatting, 
 ### Linting & Formatting: `ruff`
 
 - Runs via `uv run ruff check` (linting) and `uv run ruff format` (formatting)
-- No config file yet — uses defaults
+- Config in `[tool.ruff]` and `[tool.ruff.lint]` sections of `pyproject.toml`
+  - `target-version = "py314"`, `line-length = 100`
+  - Lint rules: `E`, `F`, `I`, `N`, `W`, `UP`, `B`, `SIM`, `ARG`, `PL`
 
 ### Type Checking: `pyright`
 
 - Runs via `uv run pyright`
-- Uses default config (no `pyproject.toml` section yet)
+- Config in `[tool.pyright]` section: `typeCheckingMode = "strict"`
 
 ### Testing: `pytest` + `pytest-cov`
 
