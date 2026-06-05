@@ -59,3 +59,11 @@ def with_entries(data_dir: Path, data_file: Path, sample_entries: list[dict]):
     data_dir.mkdir(parents=True, exist_ok=True)
     data_file.write_text(json.dumps(sample_entries, indent=2))
     return data_file
+
+
+def pytest_runtest_setup(item):
+    try:
+        from pytest_socket import disable_socket
+        disable_socket()
+    except ImportError:
+        pass

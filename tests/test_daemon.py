@@ -335,8 +335,10 @@ class TestDaemonCli:
             assert result.exit_code == 0
             assert "No microphone found" in result.output
 
-    def test_status_no_state_file(self, runner: CliRunner):
-        result = runner.invoke(daemon_cli, ["status"])
+    def test_status_no_state_file(self, runner: CliRunner, tmp_path: Path):
+        nonexistent = tmp_path / "nonexistent_daemon_state.json"
+        with patch("daemon.STATE_FILE", nonexistent):
+            result = runner.invoke(daemon_cli, ["status"])
         assert result.exit_code == 0
         assert "No active session" in result.output
 
@@ -401,15 +403,8 @@ class TestDaemonStartCli:
 
 
 class TestMainBlock:
-    def test_daemon_main_block(self):
-        with (
-            patch("daemon.daemon_cli"),
-            patch("daemon.__name__", "__main__"),
-        ):
-            # The __name__ check is at module level, so we test via exec
-            exec("from daemon import daemon_cli; daemon_cli()")
-            # Just verify the daemon_cli is callable
-            assert callable(daemon_cli)
+    def test_daemon_cli_is_callable(self):
+        assert callable(daemon_cli)
 
 
 class TestHeadlessMode:

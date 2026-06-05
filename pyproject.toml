@@ -14,8 +14,8 @@ dependencies = [
 [project.scripts]
 timelog = "main:cli"
 
-[tool.setuptools]
-py-modules = ["main", "daemon"]
+[tool.hatch.build.targets.wheel]
+packages = ["."]
 
 [build-system]
 requires = ["hatchling"]
