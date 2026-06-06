@@ -222,7 +222,7 @@ class Daemon:
 
         self.last_checkin = time.time()
 
-    def _monitor_loop(self):
+    def _monitor_loop(self):  # noqa: PLR0912
         """Continuously monitor audio for speech/silence."""
         self.last_checkin = time.time()
         stream = self.stream
@@ -369,7 +369,7 @@ def daemon_cli():
 )
 def start(silence: int, energy: int, checkin: int, headless: bool):
     """Start the daemon. Monitors mic for speech to auto-track time."""
-    global SILENCE_THRESHOLD_SEC, SPEECH_ENERGY_MIN, CHECKIN_INTERVAL_SEC
+    global SILENCE_THRESHOLD_SEC, SPEECH_ENERGY_MIN, CHECKIN_INTERVAL_SEC  # noqa: PLW0603
 
     if not _check_mic():
         sys.exit(1)

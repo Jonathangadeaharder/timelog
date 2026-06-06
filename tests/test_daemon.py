@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import struct
 import time
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -15,7 +16,6 @@ from daemon import (
     _check_mic,
     daemon_cli,
 )
-
 
 # ── Daemon unit tests ──────────────────────────────────────────
 
@@ -87,8 +87,6 @@ class TestRmsEnergy:
         assert e >= 0
 
     def test_large_amplitude(self, daemon: Daemon):
-        import struct
-
         samples = [32767, -32768, 16384, -16384, 8000, -8000, 1000, -1000]
         data = b"".join(struct.pack("<h", s) for s in samples * 25)
         e = daemon.rms_energy(data)
@@ -152,7 +150,7 @@ class TestLogEntry:
         with patch("daemon.DATA_DIR", tmp_path):
             daemon.log_entry()
             entries = json.loads(f.read_text())
-            assert len(entries) == 2
+            assert len(entries) == 2  # noqa: PLR2004
 
 
 class TestFormat:
@@ -253,7 +251,7 @@ class TestMonitorLoop:
     def test_stream_read_error_continues(self, daemon: Daemon):
         calls = iter([Exception("device error")])
 
-        def stop_on_err(*a, **kw):
+        def stop_on_err(*_, **__):
             daemon.running = False
             raise next(calls)
 
@@ -268,14 +266,12 @@ class TestMonitorLoop:
             daemon._monitor_loop()
 
     def test_speech_detection_updates_timers(self, daemon: Daemon):
-        import struct
-
         samples = [32767, -32768, 16384, -16384]
         high_energy_data = b"".join(
             struct.pack("<h", s) for s in samples * (CHUNK // 8)
         )
 
-        def one_read(*a, **kw):
+        def one_read(*_, **__):
             daemon.running = False
             return high_energy_data
 
@@ -288,17 +284,17 @@ class TestMonitorLoop:
             mock_time.time.return_value = 1000.0
             mock_time.sleep.return_value = None
             daemon._monitor_loop()
-            assert daemon.last_speech_time == 1000.0
+            assert daemon.last_speech_time == 1000.0  # noqa: PLR2004
             assert daemon.silence_start is None
 
     def test_silence_detection_starts_timer(self, daemon: Daemon):
         low_energy_data = b"\x00\x00" * (CHUNK // 2)
         read_count = 0
 
-        def two_reads(*a, **kw):
+        def two_reads(*_, **__):
             nonlocal read_count
             read_count += 1
-            if read_count >= 2:
+            if read_count >= 2:  # noqa: PLR2004
                 daemon.running = False
             return low_energy_data
 
@@ -313,7 +309,7 @@ class TestMonitorLoop:
             mock_time.sleep.return_value = None
             daemon._monitor_loop()
             assert daemon.silence_start is not None
-            assert daemon.silence_start >= 1000.0
+            assert daemon.silence_start >= 1000.0  # noqa: PLR2004
 
 
 class TestDaemonCli:
@@ -368,10 +364,10 @@ class TestRun:
         daemon.activity_start = None
         call_count = 0
 
-        def stop_after_two(*args, **kwargs):
+        def stop_after_two(*_, **__):
             nonlocal call_count
             call_count += 1
-            if call_count >= 3:
+            if call_count >= 3:  # noqa: PLR2004
                 daemon.running = False
             raise OSError("no device")
 
@@ -440,9 +436,9 @@ class TestHeadlessMode:
         # time.sleep -> stop loop before silence_start gets re-assigned
         read_calls: list[int] = []
 
-        def mock_read(*args: object, **kwargs: object) -> bytes:
+        def mock_read(*_: object, **__: object) -> bytes:
             read_calls.append(1)
-            if len(read_calls) > 2:
+            if len(read_calls) > 2:  # noqa: PLR2004
                 raise Exception("Simulated stream end")
             return low_energy_data
 
@@ -462,7 +458,7 @@ class TestHeadlessMode:
 
             with patch(
                 "daemon.time.sleep",
-                side_effect=lambda x: setattr(daemon, "running", False),
+                side_effect=lambda _: setattr(daemon, "running", False),
             ):
                 daemon._monitor_loop()
             mock_prompt.assert_not_called()

@@ -8,9 +8,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import click
-from daemon import daemon_cli as _daemon_group
 from rich.console import Console
 from rich.table import Table
+
+from daemon import daemon_cli as _daemon_group
 
 console = Console()
 
@@ -98,7 +99,8 @@ def start(project: str, task: str | None):
         console.print(
             f"[yellow]⚠ Already tracking [bold]{active['project']}[/bold]"
             f"{f' → {active.get("task")}' if active.get('task') else ''}[/yellow]\n"
-            f"   Started [dim]{active['start']}[/dim] · elapsed [cyan]{_fmt(_elapsed(active['start']))}[/cyan]\n"
+            f"   Started [dim]{active['start']}[/dim]"
+            f" · elapsed [cyan]{_fmt(_elapsed(active['start']))}[/cyan]\n"
             f"   Run [bold]timelog stop[/bold] first.",
         )
         return

@@ -61,9 +61,9 @@ def with_entries(data_dir: Path, data_file: Path, sample_entries: list[dict]):
     return data_file
 
 
-def pytest_runtest_setup(item):
+def pytest_runtest_setup(item):  # noqa: ARG001
     try:
-        from pytest_socket import disable_socket
+        from pytest_socket import disable_socket  # noqa: PLC0415
         disable_socket()
     except ImportError:
         pass

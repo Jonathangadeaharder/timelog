@@ -31,7 +31,7 @@ def test_load_returns_entries(data_dir: Path, sample_entries: list[dict]):
     (data_dir / "entries.json").write_text(json.dumps(sample_entries))
     with patch("main.DATA_DIR", data_dir):
         entries = _load()
-        assert len(entries) == 3
+        assert len(entries) == 3  # noqa: PLR2004
         assert entries[0]["project"] == "backend"
 
 
@@ -89,7 +89,7 @@ def test_clear_active_noop_when_no_file(data_dir: Path):
 
 
 def test_active_path():
-    from main import _active_path
+    from main import _active_path  # noqa: PLC0415
 
     assert _active_path().name == "active.json"
 
@@ -207,7 +207,7 @@ def test_stop_calculates_seconds(
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-16T11:30:00"):
         runner.invoke(cli, ["stop"])
         entries = json.loads(data_file.read_text())
-        assert entries[0]["seconds"] == 9000.0
+        assert entries[0]["seconds"] == 9000.0  # noqa: PLR2004
 
 
 def test_now_shows_nothing_when_idle(runner: CliRunner, data_dir: Path):
@@ -236,7 +236,7 @@ def test_log_shows_no_entries(runner: CliRunner, data_dir: Path):
         assert "No entries found" in result.output
 
 
-def test_log_defaults_to_today(runner: CliRunner, with_entries: Path, data_dir: Path):
+def test_log_defaults_to_today(runner: CliRunner, with_entries: Path, data_dir: Path):  # noqa: ARG001
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-16T14:00:00"):
         result = runner.invoke(cli, ["log"])
         assert result.exit_code == 0
@@ -247,7 +247,7 @@ def test_log_defaults_to_today(runner: CliRunner, with_entries: Path, data_dir: 
         assert "review PRs" not in result.output
 
 
-def test_log_week_flag(runner: CliRunner, with_entries: Path, data_dir: Path):
+def test_log_week_flag(runner: CliRunner, with_entries: Path, data_dir: Path):  # noqa: ARG001
     # May 16 2026 is a Saturday. Week started Monday May 11
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-16T14:00:00"):
         result = runner.invoke(cli, ["log", "--week"])
@@ -256,7 +256,7 @@ def test_log_week_flag(runner: CliRunner, with_entries: Path, data_dir: Path):
         assert "review PRs" in result.output  # May 15 is within the same week
 
 
-def test_log_all_flag(runner: CliRunner, with_entries: Path, data_dir: Path):
+def test_log_all_flag(runner: CliRunner, with_entries: Path, data_dir: Path):  # noqa: ARG001
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-16T14:00:00"):
         result = runner.invoke(cli, ["log", "--all"])
         assert result.exit_code == 0
@@ -266,7 +266,7 @@ def test_log_all_flag(runner: CliRunner, with_entries: Path, data_dir: Path):
 
 
 def test_log_no_entries_for_period(
-    runner: CliRunner, with_entries: Path, data_dir: Path
+    runner: CliRunner, with_entries: Path, data_dir: Path  # noqa: ARG001
 ):
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-20T14:00:00"):
         result = runner.invoke(cli, ["log", "--today"])
@@ -274,7 +274,7 @@ def test_log_no_entries_for_period(
         assert "No entries for Today" in result.output
 
 
-def test_log_all_with_flag(runner: CliRunner, with_entries: Path, data_dir: Path):
+def test_log_all_with_flag(runner: CliRunner, with_entries: Path, data_dir: Path):  # noqa: ARG001
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-16T14:00:00"):
         result = runner.invoke(cli, ["--help"])
         assert result.exit_code == 0
@@ -288,7 +288,7 @@ def test_report_no_entries(runner: CliRunner, data_dir: Path):
         assert "No entries found" in result.output
 
 
-def test_report_all_projects(runner: CliRunner, with_entries: Path, data_dir: Path):
+def test_report_all_projects(runner: CliRunner, with_entries: Path, data_dir: Path):  # noqa: ARG001
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-16T14:00:00"):
         result = runner.invoke(cli, ["report"])
         assert result.exit_code == 0
@@ -297,7 +297,7 @@ def test_report_all_projects(runner: CliRunner, with_entries: Path, data_dir: Pa
 
 
 def test_report_filter_by_project(
-    runner: CliRunner, with_entries: Path, data_dir: Path
+    runner: CliRunner, with_entries: Path, data_dir: Path  # noqa: ARG001
 ):
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-16T14:00:00"):
         result = runner.invoke(cli, ["report", "frontend"])
@@ -307,7 +307,7 @@ def test_report_filter_by_project(
 
 
 def test_report_shows_today_and_week(
-    runner: CliRunner, with_entries: Path, data_dir: Path
+    runner: CliRunner, with_entries: Path, data_dir: Path  # noqa: ARG001
 ):
     with patch("main.DATA_DIR", data_dir), freeze_time("2026-05-16T14:00:00"):
         result = runner.invoke(cli, ["report"])
@@ -324,7 +324,7 @@ def test_export_no_entries(runner: CliRunner, data_dir: Path):
         assert "No entries to export" in result.output
 
 
-def test_export_csv(runner: CliRunner, with_entries: Path, data_dir: Path):
+def test_export_csv(runner: CliRunner, with_entries: Path, data_dir: Path):  # noqa: ARG001
     with patch("main.DATA_DIR", data_dir):
         result = runner.invoke(cli, ["export", "csv"])
         assert result.exit_code == 0
@@ -332,17 +332,17 @@ def test_export_csv(runner: CliRunner, with_entries: Path, data_dir: Path):
         assert "backend" in result.output
 
 
-def test_export_json(runner: CliRunner, with_entries: Path, data_dir: Path):
+def test_export_json(runner: CliRunner, with_entries: Path, data_dir: Path):  # noqa: ARG001
     with patch("main.DATA_DIR", data_dir):
         result = runner.invoke(cli, ["export", "json"])
         assert result.exit_code == 0
         data = json.loads(result.output)
-        assert len(data) == 3
+        assert len(data) == 3  # noqa: PLR2004
         assert data[0]["project"] == "backend"
 
 
 def test_export_to_file(
-    runner: CliRunner, with_entries: Path, data_dir: Path, tmp_path: Path
+    runner: CliRunner, with_entries: Path, data_dir: Path, tmp_path: Path  # noqa: ARG001
 ):
     out = tmp_path / "out.csv"
     with patch("main.DATA_DIR", data_dir):
@@ -355,21 +355,20 @@ def test_export_to_file(
 
 
 def test_export_to_file_json(
-    runner: CliRunner, with_entries: Path, data_dir: Path, tmp_path: Path
+    runner: CliRunner, with_entries: Path, data_dir: Path, tmp_path: Path  # noqa: ARG001
 ):
     out = tmp_path / "out.json"
     with patch("main.DATA_DIR", data_dir):
         result = runner.invoke(cli, ["export", "json", "--output", str(out)])
         assert result.exit_code == 0
         data = json.loads(out.read_text())
-        assert len(data) == 3
-
+        assert len(data) == 3  # noqa: PLR2004
 
 def test_elapsed_positive():
     t0 = "2026-05-16T10:00:00"
     with freeze_time("2026-05-16T12:00:00"):
         e = _elapsed(t0)
-        assert e == 7200.0
+        assert e == 7200.0  # noqa: PLR2004
 
 
 def test_elapsed_zero():
@@ -379,7 +378,7 @@ def test_elapsed_zero():
 
 
 def test_elapsed_with_zulu_replaces_correctly():
-    assert "2026-05-16T10:00:00+00:00" == "2026-05-16T10:00:00Z".replace("Z", "+00:00")
+    assert "2026-05-16T10:00:00Z".replace("Z", "+00:00") == "2026-05-16T10:00:00+00:00"
 
 
 def test_elapsed_negative():
