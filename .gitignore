@@ -13,8 +13,8 @@ wheels/
 /.svelte-kit/
 /node_modules/
 
-# Database
-/drizzle/
+# Database (PGlite data dir, not migration files)
+/data/
 
 # Testing
 /coverage/
