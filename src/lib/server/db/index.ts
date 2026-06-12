@@ -9,7 +9,8 @@ export async function getDb() {
 	if (dbInstance) return dbInstance
 
 	pgInstance = new PGlite('./data/timelog')
-	await pgInstance.waitReady?.()
+	const p = pgInstance as PGlite & { waitReady?: () => Promise<void> }
+	if (p.waitReady) await p.waitReady()
 	dbInstance = drizzle(pgInstance, { schema })
 	return dbInstance
 }

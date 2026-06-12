@@ -39,14 +39,14 @@ describe('Database schema — entries, projects, settings', () => {
 	})
 
 	it('inserts and reads a project', async () => {
-		const [inserted] = await db
+		const inserted = await db
 			.insert(projects)
 			.values({ name: 'Timelog', color: 'hsl(220, 80%, 55%)' })
 			.returning()
 
-		expect(inserted.name).toBe('Timelog')
-		expect(inserted.color).toBe('hsl(220, 80%, 55%)')
-		expect(inserted.id).toBeTypeOf('number')
+		expect(inserted[0]!.name).toBe('Timelog')
+		expect(inserted[0]!.color).toBe('hsl(220, 80%, 55%)')
+		expect(inserted[0]!.id).toBeTypeOf('number')
 
 		const result = await db.select().from(projects).where(eq(projects.name, 'Timelog'))
 		expect(result).toHaveLength(1)
@@ -54,15 +54,15 @@ describe('Database schema — entries, projects, settings', () => {
 	})
 
 	it('inserts an entry with null end (running entry)', async () => {
-		const [project] = await db
+		const project = await db
 			.insert(projects)
 			.values({ name: 'RunningTest', color: 'hsl(0, 0%, 50%)' })
 			.returning()
 
-		const [entry] = await db
+		const entry = await db
 			.insert(entries)
 			.values({
-				projectId: project.id,
+				projectId: project[0]!.id,
 				task: 'Working on schema',
 				start: new Date('2025-01-01T09:00:00Z'),
 				end: null,
@@ -70,12 +70,11 @@ describe('Database schema — entries, projects, settings', () => {
 			})
 			.returning()
 
-		expect(entry.task).toBe('Working on schema')
-		expect(entry.end).toBeNull()
-		expect(entry.seconds).toBe(0)
+		expect(entry[0]!.task).toBe('Working on schema')
+		expect(entry[0]!.end).toBeNull()
+		expect(entry[0]!.seconds).toBe(0)
 
-		// Verify read-back
-		const result = await db.select().from(entries).where(eq(entries.id, entry.id))
+		const result = await db.select().from(entries).where(eq(entries.id, entry[0]!.id))
 		expect(result).toHaveLength(1)
 		expect(result[0]!.end).toBeNull()
 	})

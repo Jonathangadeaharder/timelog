@@ -10,8 +10,7 @@ describe('notifications', () => {
 
 	afterEach(() => {
 		vi.restoreAllMocks()
-		// @ts-expect-error restoring global
-		globalThis.Notification = originalNotification
+		globalThis.Notification = originalNotification as typeof Notification
 	})
 
 	function mockNotification(permission: NotificationPermission = 'default') {
@@ -29,8 +28,8 @@ describe('notifications', () => {
 		})
 		MockNotification.requestPermission = vi.fn().mockResolvedValue(permission)
 
-		// @ts-expect-error mocking global
-		globalThis.Notification = MockNotification
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		globalThis.Notification = MockNotification as any
 
 		return { MockNotification, instances }
 	}
@@ -87,8 +86,8 @@ describe('notifications', () => {
 				body: 'Body text',
 				icon: '/favicon.png'
 			})
-			expect(result).toBe(instances[0])
-			expect(instances[0].onclick).not.toBeNull()
+			expect(result).toBe(instances[0]!)
+			expect(instances[0]!.onclick).not.toBeNull()
 		})
 
 		it('onclick calls window.focus, callback, and close', () => {
@@ -99,12 +98,12 @@ describe('notifications', () => {
 			notify('Title', 'Body', onClick)
 
 			// Simulate the click event
-			const clickHandler = instances[0].onclick!
+			const clickHandler = instances[0]!.onclick!
 			clickHandler.call(instances[0], new Event('click'))
 
 			expect(focusSpy).toHaveBeenCalled()
 			expect(onClick).toHaveBeenCalled()
-			expect(instances[0].close).toHaveBeenCalled()
+			expect(instances[0]!.close).toHaveBeenCalled()
 		})
 	})
 })
