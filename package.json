@@ -1,0 +1,55 @@
+{
+	"name": "timelog",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"description": "Mic-based time tracking web app",
+	"packageManager": "pnpm@10.33.2",
+	"engines": {
+		"node": ">=20.10"
+	},
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:e2e": "playwright test",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "tsx ./src/lib/server/db/migrate.ts"
+	},
+	"dependencies": {
+		"@electric-sql/pglite": "^0.2.17",
+		"@fontsource-variable/geist": "^5.1.0",
+		"@fontsource-variable/geist-mono": "^5.1.0",
+		"drizzle-orm": "^0.45.2",
+		"lucide-svelte": "^0.460.0",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@playwright/test": "^1.60.0",
+		"@sveltejs/adapter-node": "^5.2.9",
+		"@sveltejs/kit": "^2.8.1",
+		"@sveltejs/vite-plugin-svelte": "^4.0.1",
+		"@types/node": "^22.9.0",
+		"@vitest/coverage-v8": "^2.1.9",
+		"autoprefixer": "^10.4.20",
+		"drizzle-kit": "^0.28.0",
+		"jsdom": "^25.0.1",
+		"postcss": "^8.4.49",
+		"svelte": "^5.2.0",
+		"svelte-check": "^4.0.7",
+		"tailwindcss": "^3.4.14",
+		"tsx": "^4.19.2",
+		"typescript": "^5.6.3",
+		"vite": "^5.4.21",
+		"vitest": "^2.1.9"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+	}
+}

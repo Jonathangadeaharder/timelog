@@ -1,10 +1,31 @@
 # Python-generated files
 __pycache__/
 *.py[oc]
-build/
 dist/
 wheels/
 *.egg-info
 
 # Virtual environments
 .venv
+
+# SvelteKit
+/build/
+/.svelte-kit/
+/node_modules/
+
+# Database
+/drizzle/
+
+# Testing
+/coverage/
+/test-results/
+/playwright-report/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
