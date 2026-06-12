@@ -27,7 +27,7 @@ export class MicEngine {
 	analyser: AnalyserNode | null = null
 
 	private animationFrameId: number | null = null
-	private silenceThreshold: number
+	silenceThreshold: number
 	private speechEnergy: number
 	private checkinInterval: number
 	private silenceNotified = false
