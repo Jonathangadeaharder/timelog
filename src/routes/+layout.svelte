@@ -1,6 +1,10 @@
 <script lang="ts">
-import '../app.css'
-let { children } = $props()
+	import '../app.css'
+	import AppShell from '$lib/client/AppShell.svelte'
+
+	let { children } = $props()
 </script>
 
-{@render children()}
+<AppShell>
+	{@render children()}
+</AppShell>
