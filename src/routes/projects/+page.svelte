@@ -1,53 +1,53 @@
 <script lang="ts">
-	import { fmtHm } from '$lib/shared/format'
-	import { enhance } from '$app/forms'
+import { enhance } from '$app/forms'
+import { fmtHm } from '$lib/shared/format'
 
-	interface ProjectRow {
-		id: number
-		name: string
-		color: string
-		totalSeconds: number
-		lastActivity: Date | null
+interface ProjectRow {
+	id: number
+	name: string
+	color: string
+	totalSeconds: number
+	lastActivity: Date | null
+}
+
+interface Props {
+	data: {
+		projects: ProjectRow[]
 	}
+	form?: {
+		error?: string
+		success?: boolean
+	} | null
+}
 
-	interface Props {
-		data: {
-			projects: ProjectRow[]
-		}
-		form?: {
-			error?: string
-			success?: boolean
-		} | null
-	}
+let { data, form }: Props = $props()
 
-	let { data, form }: Props = $props()
+const PRESETS = [
+	'hsl(220 70% 55%)',
+	'hsl(160 60% 45%)',
+	'hsl(340 65% 55%)',
+	'hsl(40 80% 50%)',
+	'hsl(270 55% 55%)',
+	'hsl(190 65% 45%)',
+	'hsl(15 70% 55%)',
+	'hsl(90 50% 45%)'
+]
 
-	const PRESETS = [
-		'hsl(220 70% 55%)',
-		'hsl(160 60% 45%)',
-		'hsl(340 65% 55%)',
-		'hsl(40 80% 50%)',
-		'hsl(270 55% 55%)',
-		'hsl(190 65% 45%)',
-		'hsl(15 70% 55%)',
-		'hsl(90 50% 45%)'
-	]
+let selectedColor = $state(PRESETS[0])
 
-	let selectedColor = $state(PRESETS[0])
-
-	function relativeTime(date: Date | null): string {
-		if (!date) return '—'
-		const now = Date.now()
-		const then = new Date(date).getTime()
-		const diffMs = now - then
-		const diffMin = Math.floor(diffMs / 60000)
-		if (diffMin < 1) return 'gerade eben'
-		if (diffMin < 60) return `vor ${diffMin} Min.`
-		const diffH = Math.floor(diffMin / 60)
-		if (diffH < 24) return `vor ${diffH} Std.`
-		const diffD = Math.floor(diffH / 24)
-		return `vor ${diffD} Tag${diffD > 1 ? 'en' : ''}`
-	}
+function relativeTime(date: Date | null): string {
+	if (!date) return '—'
+	const now = Date.now()
+	const then = new Date(date).getTime()
+	const diffMs = now - then
+	const diffMin = Math.floor(diffMs / 60000)
+	if (diffMin < 1) return 'gerade eben'
+	if (diffMin < 60) return `vor ${diffMin} Min.`
+	const diffH = Math.floor(diffMin / 60)
+	if (diffH < 24) return `vor ${diffH} Std.`
+	const diffD = Math.floor(diffH / 24)
+	return `vor ${diffD} Tag${diffD > 1 ? 'en' : ''}`
+}
 </script>
 
 <div class="projects-page">

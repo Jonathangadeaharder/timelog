@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Sidebar from './Sidebar.svelte'
-	import TopBar from './TopBar.svelte'
+import Sidebar from './Sidebar.svelte'
+import TopBar from './TopBar.svelte'
 
-	let { children } = $props()
+let { children } = $props()
 </script>
 
 <div class="shell">

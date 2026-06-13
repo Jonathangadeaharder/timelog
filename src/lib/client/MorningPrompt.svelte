@@ -1,31 +1,36 @@
 <script lang="ts">
-	interface Project {
-		id: number
-		name: string
-		color: string
-	}
+interface Project {
+	id: number
+	name: string
+	color: string
+}
 
-	interface Props {
-		projects: Project[]
-		onstart: (data: { projectId: number; projectName: string; projectColor: string; task: string }) => void
-	}
+interface Props {
+	projects: Project[]
+	onstart: (data: {
+		projectId: number
+		projectName: string
+		projectColor: string
+		task: string
+	}) => void
+}
 
-	let { projects, onstart }: Props = $props()
+let { projects, onstart }: Props = $props()
 
-	let selectedProjectId = $state<number | null>(null)
-	let task = $state('')
+let selectedProjectId = $state<number | null>(null)
+let task = $state('')
 
-	function handleStart() {
-		const project = projects.find((p) => p.id === selectedProjectId)
-		if (!project) return
+function handleStart() {
+	const project = projects.find((p) => p.id === selectedProjectId)
+	if (!project) return
 
-		onstart({
-			projectId: project.id,
-			projectName: project.name,
-			projectColor: project.color,
-			task
-		})
-	}
+	onstart({
+		projectId: project.id,
+		projectName: project.name,
+		projectColor: project.color,
+		task
+	})
+}
 </script>
 
 <div class="overlay" role="dialog" aria-modal="true" aria-label="Was machst du?">

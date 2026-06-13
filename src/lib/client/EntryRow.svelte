@@ -1,25 +1,25 @@
 <script lang="ts">
-	import { fmtHm, fmtIso } from '$lib/shared/format'
+import { fmtHm, fmtIso } from '$lib/shared/format'
 
-	interface Entry {
-		task: string
-		start: Date
-		end: Date | null
-		seconds: number
-		projectName: string
-		projectColor: string
-	}
+interface Entry {
+	task: string
+	start: Date
+	end: Date | null
+	seconds: number
+	projectName: string
+	projectColor: string
+}
 
-	interface Props {
-		entry: Entry
-	}
+interface Props {
+	entry: Entry
+}
 
-	let { entry }: Props = $props()
+let { entry }: Props = $props()
 
-	const startStr = $derived(fmtIso(new Date(entry.start)))
-	const endStr = $derived(entry.end ? fmtIso(new Date(entry.end)) : null)
-	const duration = $derived(fmtHm(entry.seconds))
-	const running = $derived(entry.end === null)
+const startStr = $derived(fmtIso(new Date(entry.start)))
+const endStr = $derived(entry.end ? fmtIso(new Date(entry.end)) : null)
+const duration = $derived(fmtHm(entry.seconds))
+const running = $derived(entry.end === null)
 </script>
 
 <div class="entry-row" class:running>

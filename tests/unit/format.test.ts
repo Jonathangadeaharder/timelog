@@ -1,5 +1,5 @@
-import { fmtHm, fmtIso, fmtSeconds } from '$lib/shared/format'
 import { describe, expect, it } from 'vitest'
+import { fmtHm, fmtIso, fmtSeconds } from '$lib/shared/format'
 
 describe('fmtSeconds', () => {
 	it('formats 0 as 00:00:00', () => {

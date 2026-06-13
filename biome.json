@@ -1,10 +1,15 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
+	"$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"files": {
-		"ignore": ["build", ".svelte-kit", "node_modules", "drizzle", ".venv"],
+		"includes": [
+			"**",
+			"!**/build",
+			"!**/.svelte-kit",
+			"!**/node_modules",
+			"!**/drizzle",
+			"!**/.venv"
+		],
 		"ignoreUnknown": true
 	},
 	"formatter": {
@@ -15,12 +20,14 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			"preset": "recommended",
 			"style": {
-				"useImportType": "error"
+				"useImportType": "error",
+				"noNonNullAssertion": "off"
 			},
 			"suspicious": {
-				"noExplicitAny": "warn"
+				"noExplicitAny": "warn",
+				"noUnknownAtRules": "off"
 			}
 		}
 	},
@@ -33,10 +40,20 @@
 	},
 	"overrides": [
 		{
-			"include": ["*.svelte"],
+			"includes": ["**/*.svelte"],
 			"linter": {
 				"rules": {
-					"recommended": false
+					"preset": "none"
+				}
+			}
+		},
+		{
+			"includes": ["**/*.css"],
+			"linter": {
+				"rules": {
+					"complexity": {
+						"noImportantStyles": "off"
+					}
 				}
 			}
 		}

@@ -25,8 +25,8 @@
 		"@electric-sql/pglite": "^0.2.17",
 		"@fontsource-variable/geist": "^5.1.0",
 		"@fontsource-variable/geist-mono": "^5.1.0",
+		"@lucide/svelte": "^1.18.0",
 		"drizzle-orm": "^0.45.2",
-		"lucide-svelte": "^0.460.0",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
@@ -50,6 +50,9 @@
 		"vitest": "^2.1.9"
 	},
 	"pnpm": {
-		"onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+		"onlyBuiltDependencies": [
+			"@biomejs/biome",
+			"esbuild"
+		]
 	}
 }

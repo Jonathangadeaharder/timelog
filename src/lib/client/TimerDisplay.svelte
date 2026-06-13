@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { fmtSeconds } from '$lib/shared/format'
+import { fmtSeconds } from '$lib/shared/format'
 
-	interface Props {
-		elapsedSeconds: number
-		projectName: string
-		projectColor: string
-		task: string
-	}
+interface Props {
+	elapsedSeconds: number
+	projectName: string
+	projectColor: string
+	task: string
+}
 
-	let { elapsedSeconds, projectName, projectColor, task }: Props = $props()
+let { elapsedSeconds, projectName, projectColor, task }: Props = $props()
 </script>
 
 <div class="flex flex-col items-center gap-3 py-8">

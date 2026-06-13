@@ -1,5 +1,7 @@
 const STORAGE_KEY = 'timelog-timer-state'
 
+const isBrowser = typeof window !== 'undefined' && typeof localStorage !== 'undefined'
+
 interface TimerPersistedState {
 	currentProjectId: number | null
 	currentProjectName: string
@@ -21,11 +23,12 @@ export class TimerService {
 	private destroyEffect: (() => void) | null = null
 
 	constructor() {
-		this.restoreFromStorage()
-		this.setupPersistence()
+		if (isBrowser) {
+			this.restoreFromStorage()
+			this.setupPersistence()
+		}
 	}
 
-	/** Call when discarding the timer instance to clean up the reactive effect */
 	destroy(): void {
 		if (this.destroyEffect !== null) {
 			this.destroyEffect()
@@ -38,7 +41,6 @@ export class TimerService {
 	}
 
 	start(projectId: number, projectName: string, projectColor: string, task: string): void {
-		// Stop any existing timer first
 		if (this.isRunning) {
 			this.clearInterval()
 		}
@@ -109,7 +111,6 @@ export class TimerService {
 	private setupPersistence(): void {
 		this.destroyEffect = $effect.root(() => {
 			$effect(() => {
-				// Read reactive values to track them as dependencies
 				const running = this.isRunning
 				const start = this.startTime
 
@@ -123,6 +124,7 @@ export class TimerService {
 	}
 
 	private saveToStorage(): void {
+		if (!isBrowser) return
 		const state: TimerPersistedState = {
 			currentProjectId: this.currentProjectId,
 			currentProjectName: this.currentProjectName,
@@ -134,10 +136,12 @@ export class TimerService {
 	}
 
 	private clearStorage(): void {
+		if (!isBrowser) return
 		localStorage.removeItem(STORAGE_KEY)
 	}
 
 	private restoreFromStorage(): void {
+		if (!isBrowser) return
 		const stored = localStorage.getItem(STORAGE_KEY)
 		if (!stored) return
 
@@ -164,5 +168,11 @@ export class TimerService {
 	}
 }
 
-/** Singleton timer instance for app-wide use */
+let _timer: TimerService | null = null
+
+export function getTimer(): TimerService {
+	if (!_timer) _timer = new TimerService()
+	return _timer
+}
+
 export const timer = new TimerService()

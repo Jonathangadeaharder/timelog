@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { page } from '$app/state'
-	import { Sun, Moon } from 'lucide-svelte'
+import { Moon, Sun } from '@lucide/svelte'
+import { page } from '$app/state'
 
-	const routeLabels: Record<string, string> = {
-		'/': 'Timer',
-		'/today': 'Heute',
-		'/week': 'Woche',
-		'/projects': 'Projekte',
-		'/settings': 'Settings'
-	}
+const routeLabels: Record<string, string> = {
+	'/': 'Timer',
+	'/today': 'Heute',
+	'/week': 'Woche',
+	'/projects': 'Projekte',
+	'/settings': 'Settings'
+}
 
-	let currentLabel = $derived(routeLabels[page.url.pathname] ?? 'Timelog')
+let currentLabel = $derived(routeLabels[page.url.pathname] ?? 'Timelog')
 
-	let isDark = $state(true)
+let isDark = $state(true)
 
-	function toggleTheme() {
-		isDark = !isDark
-		document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
-	}
+function toggleTheme() {
+	isDark = !isDark
+	document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
+}
 </script>
 
 <header class="topbar">

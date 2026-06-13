@@ -8,11 +8,7 @@ export async function requestPermission(): Promise<NotificationPermission> {
 	return await Notification.requestPermission()
 }
 
-export function notify(
-	title: string,
-	body: string,
-	onClick?: () => void
-): Notification | null {
+export function notify(title: string, body: string, onClick?: () => void): Notification | null {
 	if (Notification.permission !== 'granted') return null
 	const n = new Notification(title, { body, icon: '/favicon.png' })
 	n.onclick = () => {

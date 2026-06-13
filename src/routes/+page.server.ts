@@ -1,7 +1,7 @@
+import { fail } from '@sveltejs/kit'
+import { gte, isNull, sql } from 'drizzle-orm'
 import { getDb } from '$lib/server/db/index'
 import { entries, projects } from '$lib/server/db/schema'
-import { isNull, gte, and, sql } from 'drizzle-orm'
-import { fail } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async () => {
@@ -10,16 +10,9 @@ export const load: PageServerLoad = async () => {
 	const today = new Date()
 	today.setHours(0, 0, 0, 0)
 
-	const [activeEntry] = await db
-		.select()
-		.from(entries)
-		.where(isNull(entries.end))
-		.limit(1)
+	const [activeEntry] = await db.select().from(entries).where(isNull(entries.end)).limit(1)
 
-	const todayEntries = await db
-		.select()
-		.from(entries)
-		.where(gte(entries.start, today))
+	const todayEntries = await db.select().from(entries).where(gte(entries.start, today))
 
 	const allProjects = await db.select().from(projects)
 
@@ -97,7 +90,10 @@ export const actions: Actions = {
 		if (active) {
 			const now = new Date()
 			const elapsed = Math.floor((now.getTime() - active.start.getTime()) / 1000)
-			await db.update(entries).set({ end: now, seconds: elapsed }).where(sql`${entries.id} = ${active.id}`)
+			await db
+				.update(entries)
+				.set({ end: now, seconds: elapsed })
+				.where(sql`${entries.id} = ${active.id}`)
 		}
 
 		// Start new entry

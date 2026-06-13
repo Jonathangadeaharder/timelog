@@ -1,14 +1,14 @@
 <script lang="ts">
-	interface Props {
-		silenceMinutes: number
-		currentTask: string
-		currentProject: string
-		oncontinue: () => void
-		onswitch: () => void
-		onstop: () => void
-	}
+interface Props {
+	silenceMinutes: number
+	currentTask: string
+	currentProject: string
+	oncontinue: () => void
+	onswitch: () => void
+	onstop: () => void
+}
 
-	let { silenceMinutes, currentTask, currentProject, oncontinue, onswitch, onstop }: Props = $props()
+let { silenceMinutes, currentTask, currentProject, oncontinue, onswitch, onstop }: Props = $props()
 </script>
 
 <div class="overlay" role="dialog" aria-modal="true" aria-label="Keine Sprache erkannt">

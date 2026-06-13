@@ -1,8 +1,8 @@
-import { getDb } from '$lib/server/db'
-import { projects, entries } from '$lib/server/db/schema'
-import { eq, sql, max } from 'drizzle-orm'
 import { fail } from '@sveltejs/kit'
-import type { PageServerLoad, Actions } from './$types'
+import { max, sql } from 'drizzle-orm'
+import { getDb } from '$lib/server/db'
+import { entries, projects } from '$lib/server/db/schema'
+import type { Actions, PageServerLoad } from './$types'
 
 interface ProjectRow {
 	id: number

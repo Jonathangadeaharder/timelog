@@ -1,5 +1,5 @@
-import { TimerService } from '$lib/client/timer.svelte'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { TimerService } from '$lib/client/timer.svelte'
 
 /**
  * Unit tests for TimerService.
@@ -179,9 +179,7 @@ describe('TimerService', () => {
 		})
 
 		it('throws if no timer is running', () => {
-			expect(() => timer.switch(1, 'Project A', '#ff0000', 'Task')).toThrow(
-				'Timer is not running'
-			)
+			expect(() => timer.switch(1, 'Project A', '#ff0000', 'Task')).toThrow('Timer is not running')
 		})
 	})
 

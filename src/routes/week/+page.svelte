@@ -1,49 +1,49 @@
 <script lang="ts">
-	import { fmtHm } from '$lib/shared/format'
+import { fmtHm } from '$lib/shared/format'
 
-	interface DayData {
-		date: string
-		dayName: string
-		totalSeconds: number
-		entries: {
-			id: number
-			task: string
-			start: Date
-			end: Date | null
-			seconds: number
-			projectId: number
-			projectName: string
-			projectColor: string
-		}[]
-	}
-
-	interface ProjectTotal {
+interface DayData {
+	date: string
+	dayName: string
+	totalSeconds: number
+	entries: {
+		id: number
+		task: string
+		start: Date
+		end: Date | null
+		seconds: number
 		projectId: number
 		projectName: string
 		projectColor: string
-		totalSeconds: number
+	}[]
+}
+
+interface ProjectTotal {
+	projectId: number
+	projectName: string
+	projectColor: string
+	totalSeconds: number
+}
+
+interface Props {
+	data: {
+		days: DayData[]
+		projectTotals: ProjectTotal[]
+		weekTotalSeconds: number
 	}
+}
 
-	interface Props {
-		data: {
-			days: DayData[]
-			projectTotals: ProjectTotal[]
-			weekTotalSeconds: number
-		}
-	}
+let { data }: Props = $props()
 
-	let { data }: Props = $props()
+const weekTotalHm = $derived(fmtHm(data.weekTotalSeconds))
+const maxDaySeconds = $derived(Math.max(...data.days.map((d) => d.totalSeconds), 1))
+const maxProjectSeconds = $derived(
+	data.projectTotals.length > 0 ? (data.projectTotals[0]?.totalSeconds ?? 0) : 0
+)
 
-	const weekTotalHm = $derived(fmtHm(data.weekTotalSeconds))
-	const maxDaySeconds = $derived(Math.max(...data.days.map((d) => d.totalSeconds), 1))
-	const maxProjectSeconds = $derived(
-		data.projectTotals.length > 0 ? (data.projectTotals[0]?.totalSeconds ?? 0) : 0
-	)
-
-	function barHeight(seconds: number): string {
-		if (maxDaySeconds === 0) return '0%'
-		return `${(seconds / maxDaySeconds) * 100}%`
-	}
+function barHeight(seconds: number): string {
+	if (maxDaySeconds === 0) return '0%'
+	return `${(seconds / maxDaySeconds) * 100}%`
+}
 </script>
 
 <div class="week-page">

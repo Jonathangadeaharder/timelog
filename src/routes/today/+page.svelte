@@ -1,40 +1,40 @@
 <script lang="ts">
-	import { fmtHm } from '$lib/shared/format'
-	import EntryRow from '$lib/client/EntryRow.svelte'
+import EntryRow from '$lib/client/EntryRow.svelte'
+import { fmtHm } from '$lib/shared/format'
 
-	interface ProjectTotal {
-		projectId: number
-		projectName: string
-		projectColor: string
+interface ProjectTotal {
+	projectId: number
+	projectName: string
+	projectColor: string
+	totalSeconds: number
+}
+
+interface TodayEntry {
+	id: number
+	task: string
+	start: Date
+	end: Date | null
+	seconds: number
+	projectId: number
+	projectName: string
+	projectColor: string
+}
+
+interface Props {
+	data: {
+		entries: TodayEntry[]
+		projectTotals: ProjectTotal[]
 		totalSeconds: number
+		entryCount: number
 	}
+}
 
-	interface TodayEntry {
-		id: number
-		task: string
-		start: Date
-		end: Date | null
-		seconds: number
-		projectId: number
-		projectName: string
-		projectColor: string
-	}
+let { data }: Props = $props()
 
-	interface Props {
-		data: {
-			entries: TodayEntry[]
-			projectTotals: ProjectTotal[]
-			totalSeconds: number
-			entryCount: number
-		}
-	}
-
-	let { data }: Props = $props()
-
-	const totalHm = $derived(fmtHm(data.totalSeconds))
-	const maxProjectSeconds = $derived(
-		data.projectTotals.length > 0 ? (data.projectTotals[0]?.totalSeconds ?? 0) : 0
-	)
+const totalHm = $derived(fmtHm(data.totalSeconds))
+const maxProjectSeconds = $derived(
+	data.projectTotals.length > 0 ? (data.projectTotals[0]?.totalSeconds ?? 0) : 0
+)
 </script>
 
 <div class="today-page">

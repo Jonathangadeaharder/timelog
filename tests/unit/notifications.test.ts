@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { requestPermission, notify, isNotificationSupported } from '$lib/client/notifications'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { isNotificationSupported, notify, requestPermission } from '$lib/client/notifications'
 
 describe('notifications', () => {
 	let originalNotification: typeof Notification
@@ -16,11 +16,13 @@ describe('notifications', () => {
 	function mockNotification(permission: NotificationPermission = 'default') {
 		const instances: { onclick: ((ev: Event) => void) | null; close: () => void }[] = []
 
-		const MockNotification = vi.fn().mockImplementation((title: string, _options?: NotificationOptions) => {
-			const instance = { onclick: null as ((ev: Event) => void) | null, close: vi.fn() }
-			instances.push(instance)
-			return instance
-		}) as unknown as typeof Notification
+		const MockNotification = vi
+			.fn()
+			.mockImplementation((_title: string, _options?: NotificationOptions) => {
+				const instance = { onclick: null as ((ev: Event) => void) | null, close: vi.fn() }
+				instances.push(instance)
+				return instance
+			}) as unknown as typeof Notification
 
 		Object.defineProperty(MockNotification, 'permission', {
 			get: () => permission,
@@ -87,7 +89,7 @@ describe('notifications', () => {
 				icon: '/favicon.png'
 			})
 			expect(result).toBe(instances[0]!)
-			expect(instances[0]!.onclick).not.toBeNull()
+			expect(instances[0]?.onclick).not.toBeNull()
 		})
 
 		it('onclick calls window.focus, callback, and close', () => {
@@ -103,7 +105,7 @@ describe('notifications', () => {
 
 			expect(focusSpy).toHaveBeenCalled()
 			expect(onClick).toHaveBeenCalled()
-			expect(instances[0]!.close).toHaveBeenCalled()
+			expect(instances[0]?.close).toHaveBeenCalled()
 		})
 	})
 })

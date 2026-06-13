@@ -1,8 +1,8 @@
 import { PGlite } from '@electric-sql/pglite'
-import { drizzle } from 'drizzle-orm/pglite'
 import { eq } from 'drizzle-orm'
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import { projects, entries, settings } from '$lib/server/db/schema'
+import { drizzle } from 'drizzle-orm/pglite'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { entries, projects, settings } from '$lib/server/db/schema'
 
 describe('Database schema — entries, projects, settings', () => {
 	let db: ReturnType<typeof drizzle>
@@ -44,13 +44,13 @@ describe('Database schema — entries, projects, settings', () => {
 			.values({ name: 'Timelog', color: 'hsl(220, 80%, 55%)' })
 			.returning()
 
-		expect(inserted[0]!.name).toBe('Timelog')
-		expect(inserted[0]!.color).toBe('hsl(220, 80%, 55%)')
-		expect(inserted[0]!.id).toBeTypeOf('number')
+		expect(inserted[0]?.name).toBe('Timelog')
+		expect(inserted[0]?.color).toBe('hsl(220, 80%, 55%)')
+		expect(inserted[0]?.id).toBeTypeOf('number')
 
 		const result = await db.select().from(projects).where(eq(projects.name, 'Timelog'))
 		expect(result).toHaveLength(1)
-		expect(result[0]!.name).toBe('Timelog')
+		expect(result[0]?.name).toBe('Timelog')
 	})
 
 	it('inserts an entry with null end (running entry)', async () => {
@@ -70,13 +70,13 @@ describe('Database schema — entries, projects, settings', () => {
 			})
 			.returning()
 
-		expect(entry[0]!.task).toBe('Working on schema')
-		expect(entry[0]!.end).toBeNull()
-		expect(entry[0]!.seconds).toBe(0)
+		expect(entry[0]?.task).toBe('Working on schema')
+		expect(entry[0]?.end).toBeNull()
+		expect(entry[0]?.seconds).toBe(0)
 
 		const result = await db.select().from(entries).where(eq(entries.id, entry[0]!.id))
 		expect(result).toHaveLength(1)
-		expect(result[0]!.end).toBeNull()
+		expect(result[0]?.end).toBeNull()
 	})
 
 	it('inserts and reads settings', async () => {

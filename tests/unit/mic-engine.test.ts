@@ -1,5 +1,5 @@
-import { MicEngine, rmsEnergy } from '$lib/client/mic.svelte'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { MicEngine, rmsEnergy } from '$lib/client/mic.svelte'
 
 /**
  * Unit tests for MicEngine with mocked Web Audio API.
@@ -31,7 +31,7 @@ const mockAudioContext = {
 	close: vi.fn()
 }
 
-let rafCallbacks: Map<number, FrameRequestCallback> = new Map()
+const rafCallbacks: Map<number, FrameRequestCallback> = new Map()
 let rafIdCounter = 0
 
 beforeEach(() => {
@@ -44,7 +44,10 @@ beforeEach(() => {
 		})
 	)
 
-	vi.stubGlobal('AudioContext', vi.fn(() => mockAudioContext))
+	vi.stubGlobal(
+		'AudioContext',
+		vi.fn(() => mockAudioContext)
+	)
 
 	vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
 		const id = ++rafIdCounter

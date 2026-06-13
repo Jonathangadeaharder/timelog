@@ -1,45 +1,53 @@
 <script lang="ts">
-	import { page } from '$app/state'
-	import { Timer, CalendarDays, CalendarRange, FolderKanban, Settings, Mic, MicOff } from 'lucide-svelte'
-	import { timer } from './timer.svelte'
-	import { MicEngine } from './mic.svelte'
+import {
+	CalendarDays,
+	CalendarRange,
+	FolderKanban,
+	Mic,
+	MicOff,
+	Settings,
+	Timer
+} from '@lucide/svelte'
+import { page } from '$app/state'
+import { MicEngine } from './mic.svelte'
+import { timer } from './timer.svelte'
 
-	interface NavItem {
-		label: string
-		href: string
-		icon: typeof Timer
-	}
+interface NavItem {
+	label: string
+	href: string
+	icon: typeof Timer
+}
 
-	const nav: NavItem[] = [
-		{ label: 'Timer', href: '/', icon: Timer },
-		{ label: 'Heute', href: '/today', icon: CalendarDays },
-		{ label: 'Woche', href: '/week', icon: CalendarRange },
-		{ label: 'Projekte', href: '/projects', icon: FolderKanban },
-		{ label: 'Settings', href: '/settings', icon: Settings }
-	]
+const nav: NavItem[] = [
+	{ label: 'Timer', href: '/', icon: Timer },
+	{ label: 'Heute', href: '/today', icon: CalendarDays },
+	{ label: 'Woche', href: '/week', icon: CalendarRange },
+	{ label: 'Projekte', href: '/projects', icon: FolderKanban },
+	{ label: 'Settings', href: '/settings', icon: Settings }
+]
 
-	let mic = $state<MicEngine | null>(null)
+let mic = $state<MicEngine | null>(null)
 
-	$effect(() => {
-		if (timer.isRunning) {
-			const engine = new MicEngine()
-			engine.start()
-			mic = engine
-			return () => {
-				engine.stop()
-				mic = null
-			}
+$effect(() => {
+	if (timer.isRunning) {
+		const engine = new MicEngine()
+		engine.start()
+		mic = engine
+		return () => {
+			engine.stop()
+			mic = null
 		}
-	})
-
-	function formatElapsed(seconds: number): string {
-		const h = Math.floor(seconds / 3600)
-		const m = Math.floor((seconds % 3600) / 60)
-		const s = seconds % 60
-		return h > 0
-			? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-			: `${m}:${String(s).padStart(2, '0')}`
 	}
+})
+
+function formatElapsed(seconds: number): string {
+	const h = Math.floor(seconds / 3600)
+	const m = Math.floor((seconds % 3600) / 60)
+	const s = seconds % 60
+	return h > 0
+		? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+		: `${m}:${String(s).padStart(2, '0')}`
+}
 </script>
 
 <aside class="sidebar">

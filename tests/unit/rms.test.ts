@@ -1,5 +1,5 @@
-import { rmsEnergy } from '$lib/client/mic.svelte'
 import { describe, expect, it } from 'vitest'
+import { rmsEnergy } from '$lib/client/mic.svelte'
 
 describe('rmsEnergy', () => {
 	it('returns 0 for silence (all zeros)', () => {

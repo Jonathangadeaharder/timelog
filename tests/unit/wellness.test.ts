@@ -1,5 +1,5 @@
-import { WELLNESS_TIPS, pickWellness } from '$lib/shared/wellness'
 import { describe, expect, it } from 'vitest'
+import { pickWellness, WELLNESS_TIPS } from '$lib/shared/wellness'
 
 describe('pickWellness', () => {
 	it('returns a non-empty string', () => {
