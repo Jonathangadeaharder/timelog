@@ -2,6 +2,7 @@
 	"name": "timelog",
 	"version": "0.1.0",
 	"private": true,
+	"main": "electron/main.js",
 	"type": "module",
 	"description": "Mic-based time tracking web app",
 	"packageManager": "pnpm@10.33.2",
@@ -19,6 +20,9 @@
 		"test:coverage": "vitest run --coverage",
 		"test:watch": "vitest",
 		"test:e2e": "playwright test",
+		"electron:dev": "concurrently \"pnpm dev\" \"wait-on http://localhost:5173 && electron .\"",
+		"electron:build": "pnpm build && tsc -p electron/tsconfig.json && electron-builder --mac",
+		"electron:preview": "tsc -p electron/tsconfig.json && electron .",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "tsx ./src/lib/server/db/migrate.ts"
 	},
@@ -28,6 +32,7 @@
 		"@fontsource-variable/geist-mono": "^5.1.0",
 		"@lucide/svelte": "^1.18.0",
 		"drizzle-orm": "^0.45.2",
+		"electron-updater": "^6.8.9",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
@@ -37,9 +42,13 @@
 		"@sveltejs/kit": "^2.8.1",
 		"@sveltejs/vite-plugin-svelte": "^4.0.1",
 		"@types/node": "^22.9.0",
+		"@types/semver": "^7.7.1",
 		"@vitest/coverage-v8": "^2.1.9",
 		"autoprefixer": "^10.4.20",
+		"concurrently": "^10.0.3",
 		"drizzle-kit": "^0.28.0",
+		"electron": "^42.4.0",
+		"electron-builder": "^26.15.3",
 		"jsdom": "^25.0.1",
 		"postcss": "^8.4.49",
 		"svelte": "^5.2.0",
@@ -48,7 +57,8 @@
 		"tsx": "^4.19.2",
 		"typescript": "^5.6.3",
 		"vite": "^5.4.21",
-		"vitest": "^2.1.9"
+		"vitest": "^2.1.9",
+		"wait-on": "^9.0.10"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [

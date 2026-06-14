@@ -9,7 +9,11 @@
 			"!**/node_modules",
 			"!**/drizzle",
 			"!**/.venv",
-			"!**/.superpowers"
+			"!**/.superpowers",
+			"!**/coverage",
+			"!**/dist-electron",
+			"!electron/*.js",
+			"!electron/*.js.map"
 		],
 		"ignoreUnknown": true
 	},
