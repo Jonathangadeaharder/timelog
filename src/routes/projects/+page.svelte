@@ -1,7 +1,4 @@
 <script lang="ts">
-import { enhance } from '$app/forms'
-import { fmtHm } from '$lib/shared/format'
-
 interface ProjectRow {
 	id: number
 	name: string
@@ -33,9 +30,9 @@ const PRESETS = [
 	'hsl(90 50% 45%)'
 ]
 
-let selectedColor = $state(PRESETS[0])
+let _selectedColor = $state(PRESETS[0])
 
-function relativeTime(date: Date | null): string {
+function _relativeTime(date: Date | null): string {
 	if (!date) return '—'
 	const now = Date.now()
 	const then = new Date(date).getTime()

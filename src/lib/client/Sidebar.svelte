@@ -1,14 +1,5 @@
 <script lang="ts">
-import {
-	CalendarDays,
-	CalendarRange,
-	FolderKanban,
-	Mic,
-	MicOff,
-	Settings,
-	Timer
-} from '@lucide/svelte'
-import { page } from '$app/state'
+import { CalendarDays, CalendarRange, FolderKanban, Settings, Timer } from '@lucide/svelte'
 import { MicEngine } from './mic.svelte'
 import { timer } from './timer.svelte'
 
@@ -18,7 +9,7 @@ interface NavItem {
 	icon: typeof Timer
 }
 
-const nav: NavItem[] = [
+const _nav: NavItem[] = [
 	{ label: 'Timer', href: '/', icon: Timer },
 	{ label: 'Heute', href: '/today', icon: CalendarDays },
 	{ label: 'Woche', href: '/week', icon: CalendarRange },
@@ -26,21 +17,21 @@ const nav: NavItem[] = [
 	{ label: 'Settings', href: '/settings', icon: Settings }
 ]
 
-let mic = $state<MicEngine | null>(null)
+let _mic = $state<MicEngine | null>(null)
 
 $effect(() => {
 	if (timer.isRunning) {
 		const engine = new MicEngine()
 		engine.start()
-		mic = engine
+		_mic = engine
 		return () => {
 			engine.stop()
-			mic = null
+			_mic = null
 		}
 	}
 })
 
-function formatElapsed(seconds: number): string {
+function _formatElapsed(seconds: number): string {
 	const h = Math.floor(seconds / 3600)
 	const m = Math.floor((seconds % 3600) / 60)
 	const s = seconds % 60

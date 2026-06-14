@@ -34,13 +34,13 @@ interface Props {
 
 let { data }: Props = $props()
 
-const weekTotalHm = $derived(fmtHm(data.weekTotalSeconds))
+const _weekTotalHm = $derived(fmtHm(data.weekTotalSeconds))
 const maxDaySeconds = $derived(Math.max(...data.days.map((d) => d.totalSeconds), 1))
-const maxProjectSeconds = $derived(
+const _maxProjectSeconds = $derived(
 	data.projectTotals.length > 0 ? (data.projectTotals[0]?.totalSeconds ?? 0) : 0
 )
 
-function barHeight(seconds: number): string {
+function _barHeight(seconds: number): string {
 	if (maxDaySeconds === 0) return '0%'
 	return `${(seconds / maxDaySeconds) * 100}%`
 }

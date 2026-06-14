@@ -1,12 +1,6 @@
 <script lang="ts">
-import { enhance } from '$app/forms'
-import CheckinDialog from '$lib/client/CheckinDialog.svelte'
-import MicBadge from '$lib/client/MicBadge.svelte'
-import MorningPrompt from '$lib/client/MorningPrompt.svelte'
 import { MicEngine } from '$lib/client/mic.svelte'
 import { notify, requestPermission } from '$lib/client/notifications'
-import SilenceDialog from '$lib/client/SilenceDialog.svelte'
-import TimerDisplay from '$lib/client/TimerDisplay.svelte'
 import { timer } from '$lib/client/timer.svelte'
 import { pickWellness } from '$lib/shared/wellness'
 
@@ -35,13 +29,13 @@ interface PageData {
 
 let { data }: { data: PageData } = $props()
 
-let showMorningPrompt = $state(false)
+let _showMorningPrompt = $state(false)
 let showSilenceDialog = $state(false)
 let showCheckinDialog = $state(false)
-let showWrapUp = $state(false)
+let _showWrapUp = $state(false)
 let mic: MicEngine | null = $state(null)
 
-let silenceSeconds = $state(0)
+let _silenceSeconds = $state(0)
 let lastCheckinTime = $state(Date.now())
 
 let hourNow = $state(new Date().getHours())
@@ -51,9 +45,9 @@ $effect(() => {
 	const id = setInterval(() => {
 		hourNow = new Date().getHours()
 		if (mic?.silenceStart !== null && mic?.silenceStart !== undefined) {
-			silenceSeconds = Math.floor((Date.now() - mic.silenceStart) / 1000)
+			_silenceSeconds = Math.floor((Date.now() - mic.silenceStart) / 1000)
 		} else {
-			silenceSeconds = 0
+			_silenceSeconds = 0
 		}
 	}, 1000)
 	return () => clearInterval(id)
@@ -84,11 +78,11 @@ $effect(() => {
 })
 
 $effect(() => {
-	showMorningPrompt = !timer.isRunning && !data.activeEntry
+	_showMorningPrompt = !timer.isRunning && !data.activeEntry
 })
 
 $effect(() => {
-	showWrapUp = isAfterSix && timer.isRunning
+	_showWrapUp = isAfterSix && timer.isRunning
 })
 
 $effect(() => {
@@ -128,40 +122,40 @@ $effect(() => {
 	return () => clearInterval(id)
 })
 
-function handleCheckinContinue() {
+function _handleCheckinContinue() {
 	showCheckinDialog = false
 	lastCheckinTime = Date.now()
 }
 
-function handleCheckinSwitch() {
+function _handleCheckinSwitch() {
 	showCheckinDialog = false
 	lastCheckinTime = Date.now()
-	showMorningPrompt = true
+	_showMorningPrompt = true
 }
 
-function handleMorningStart(details: {
+function _handleMorningStart(details: {
 	projectId: number
 	projectName: string
 	projectColor: string
 	task: string
 }) {
-	showMorningPrompt = false
+	_showMorningPrompt = false
 	timer.start(details.projectId, details.projectName, details.projectColor, details.task)
 }
 
-function handleSilenceContinue() {
+function _handleSilenceContinue() {
 	showSilenceDialog = false
 	if (mic) {
 		mic.silenceStart = Date.now()
 	}
 }
 
-function handleSilenceSwitch() {
+function _handleSilenceSwitch() {
 	showSilenceDialog = false
-	showMorningPrompt = true
+	_showMorningPrompt = true
 }
 
-function handleSilenceStop() {
+function _handleSilenceStop() {
 	showSilenceDialog = false
 	stopTimer()
 }
@@ -173,11 +167,11 @@ function stopTimer() {
 		mic.stop()
 		mic = null
 	}
-	showWrapUp = false
+	_showWrapUp = false
 }
 
-function handleWrapUpContinue() {
-	showWrapUp = false
+function _handleWrapUpContinue() {
+	_showWrapUp = false
 }
 </script>
 

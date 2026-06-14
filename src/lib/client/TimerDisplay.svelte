@@ -1,6 +1,4 @@
 <script lang="ts">
-import { fmtSeconds } from '$lib/shared/format'
-
 interface Props {
 	elapsedSeconds: number
 	projectName: string

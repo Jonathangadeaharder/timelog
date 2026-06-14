@@ -1,5 +1,4 @@
 <script lang="ts">
-import { Moon, Sun } from '@lucide/svelte'
 import { page } from '$app/state'
 
 const routeLabels: Record<string, string> = {
@@ -10,11 +9,11 @@ const routeLabels: Record<string, string> = {
 	'/settings': 'Settings'
 }
 
-let currentLabel = $derived(routeLabels[page.url.pathname] ?? 'Timelog')
+let _currentLabel = $derived(routeLabels[page.url.pathname] ?? 'Timelog')
 
 let isDark = $state(true)
 
-function toggleTheme() {
+function _toggleTheme() {
 	isDark = !isDark
 	document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
 }

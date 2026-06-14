@@ -1,6 +1,4 @@
 <script lang="ts">
-import { fmtHm } from '$lib/shared/format'
-
 interface Props {
 	isSpeaking: boolean
 	silenceSeconds: number
@@ -10,7 +8,7 @@ interface Props {
 let { isSpeaking, silenceSeconds, silenceThreshold }: Props = $props()
 
 let remaining = $derived(Math.max(0, silenceThreshold - silenceSeconds))
-let isSilent = $derived(!isSpeaking && remaining > 0)
+let _isSilent = $derived(!isSpeaking && remaining > 0)
 </script>
 
 {#if isSpeaking}
