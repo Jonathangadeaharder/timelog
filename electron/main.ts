@@ -6,6 +6,7 @@ import { createTray } from './tray'
 
 let mainWindow: BrowserWindow | null = null
 let serverProcess: ChildProcess | null = null
+let isQuitting = false
 
 const SERVER_PORT = 3000
 const SERVER_URL = `http://localhost:${SERVER_PORT}`
@@ -32,35 +33,52 @@ function startServer(): Promise<void> {
 			stdio: ['pipe', 'pipe', 'pipe'],
 		})
 
+		let pollInterval: ReturnType<typeof setInterval> | null = null
+
+		const cleanup = () => {
+			if (pollInterval) {
+				clearInterval(pollInterval)
+				pollInterval = null
+			}
+		}
+
 		serverProcess.stdout?.on('data', (data: Buffer) => {
 			const msg = data.toString()
 			console.log('[server]', msg)
-			if (msg.includes('Listening')) resolve()
+			if (msg.includes('Listening')) {
+				cleanup()
+				resolve()
+			}
 		})
 
 		serverProcess.stderr?.on('data', (data: Buffer) => {
 			console.error('[server:err]', data.toString())
 		})
 
-		serverProcess.on('error', reject)
+		serverProcess.on('error', (err) => {
+			cleanup()
+			reject(err)
+		})
 
 		serverProcess.on('exit', (code) => {
+			cleanup()
 			if (code !== 0 && code !== null) {
 				reject(new Error(`Server exited with code ${code}`))
 			}
 		})
 
 		let attempts = 0
-		const interval = setInterval(async () => {
+		pollInterval = setInterval(async () => {
 			attempts++
 			if (attempts > 50) {
-				clearInterval(interval)
+				cleanup()
 				reject(new Error('Server failed to start within 10s'))
+				return
 			}
 			try {
 				const res = await fetch(SERVER_URL)
 				if (res.ok) {
-					clearInterval(interval)
+					cleanup()
 					resolve()
 				}
 			} catch {}
@@ -90,9 +108,26 @@ function createWindow() {
 
 	mainWindow.loadURL(SERVER_URL)
 
+	mainWindow.on('close', (event) => {
+		if (!isQuitting) {
+			event.preventDefault()
+			mainWindow?.hide()
+		}
+	})
+
 	mainWindow.on('closed', () => {
 		mainWindow = null
 	})
+}
+
+function showWindow() {
+	if (!mainWindow || mainWindow.isDestroyed()) {
+		createWindow()
+	} else {
+		if (mainWindow.isMinimized()) mainWindow.restore()
+		mainWindow.show()
+		mainWindow.focus()
+	}
 }
 
 app.whenReady().then(async () => {
@@ -111,33 +146,28 @@ app.whenReady().then(async () => {
 	}
 
 	createWindow()
-	createTray(mainWindow!)
+	createTray(showWindow)
 
-	autoUpdater.autoDownload = true
-	autoUpdater.autoInstallOnAppQuit = true
-	autoUpdater.checkForUpdates()
-	setInterval(() => {
+	if (app.isPackaged) {
+		autoUpdater.autoDownload = true
+		autoUpdater.autoInstallOnAppQuit = true
 		autoUpdater.checkForUpdates()
-	}, 4 * 60 * 60 * 1000)
+		setInterval(() => {
+			autoUpdater.checkForUpdates()
+		}, 4 * 60 * 60 * 1000)
+	}
 
 	app.on('activate', () => {
-		if (BrowserWindow.getAllWindows().length === 0) {
-			createWindow()
-		} else {
-			mainWindow?.show()
-		}
+		showWindow()
 	})
 })
 
 app.on('second-instance', () => {
-	if (mainWindow) {
-		if (mainWindow.isMinimized()) mainWindow.restore()
-		mainWindow.show()
-		mainWindow.focus()
-	}
+	showWindow()
 })
 
 app.on('before-quit', () => {
+	isQuitting = true
 	if (serverProcess) {
 		serverProcess.kill('SIGTERM')
 		serverProcess = null

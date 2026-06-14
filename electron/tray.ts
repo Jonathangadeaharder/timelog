@@ -1,8 +1,8 @@
-import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron'
+import { app, Menu, nativeImage, Tray } from 'electron'
 
 let tray: Tray | null = null
 
-export function createTray(mainWindow: BrowserWindow): void {
+export function createTray(showWindow: () => void): void {
 	const icon = nativeImage.createFromDataURL(
 		'data:image/svg+xml;base64,' +
 			Buffer.from(
@@ -17,9 +17,7 @@ export function createTray(mainWindow: BrowserWindow): void {
 		{
 			label: 'Show Timelog',
 			click: () => {
-				if (mainWindow.isMinimized()) mainWindow.restore()
-				mainWindow.show()
-				mainWindow.focus()
+				showWindow()
 			},
 		},
 		{ type: 'separator' },
@@ -34,9 +32,7 @@ export function createTray(mainWindow: BrowserWindow): void {
 	tray.setContextMenu(contextMenu)
 
 	tray.on('click', () => {
-		if (mainWindow.isMinimized()) mainWindow.restore()
-		mainWindow.show()
-		mainWindow.focus()
+		showWindow()
 	})
 }
 
