@@ -94,6 +94,7 @@ function createWindow() {
 		minHeight: 600,
 		titleBarStyle: 'hiddenInset',
 		trafficLightPosition: { x: 16, y: 18 },
+		icon: path.join(__dirname, 'resources', 'icon.png'),
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			contextIsolation: true,
