@@ -40,6 +40,8 @@ mac:
         - arm64
   hardenedRuntime: true
   gatekeeperAssess: false
+  identity: ${APPLE_DEV_ID}
+  notarize: false
 dmg:
   sign: false
 publish:
