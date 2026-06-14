@@ -32,4 +32,7 @@ Thumbs.db
 
 # Superpowers
 .superpowers/
+# Electron build output
 dist-electron/
+electron/*.js
+electron/*.js.map
