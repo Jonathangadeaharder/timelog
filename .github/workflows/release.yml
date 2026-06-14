@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@a725b564a0a4c4d7daf5ae1f3b5b9e60a35c91e4 # v4
 
       - uses: actions/setup-node@v4
         with:
@@ -29,7 +29,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@c95fe1489396c3d3a69a4c7831bc416a3b7e739d # v2
         with:
           files: |
             dist-electron/*.dmg
