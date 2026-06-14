@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import { spawn, type ChildProcess } from 'node:child_process'
 import { createRequire } from 'node:module'
 import path from 'node:path'
@@ -107,6 +108,13 @@ app.whenReady().then(async () => {
 
 	createWindow()
 	createTray(mainWindow!)
+
+	autoUpdater.autoDownload = true
+	autoUpdater.autoInstallOnAppQuit = true
+	autoUpdater.checkForUpdates()
+	setInterval(() => {
+		autoUpdater.checkForUpdates()
+	}, 4 * 60 * 60 * 1000)
 
 	app.on('activate', () => {
 		if (BrowserWindow.getAllWindows().length === 0) {
