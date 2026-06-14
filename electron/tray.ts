@@ -18,15 +18,15 @@ export function createTray(showWindow: () => void): void {
 			label: 'Show Timelog',
 			click: () => {
 				showWindow()
-			},
+			}
 		},
 		{ type: 'separator' },
 		{
 			label: 'Quit',
 			click: () => {
 				app.quit()
-			},
-		},
+			}
+		}
 	])
 
 	tray.setContextMenu(contextMenu)
@@ -41,7 +41,7 @@ export function updateTrayIcon(isRunning: boolean): void {
 	const color = isRunning ? '#4da6ff' : '#888'
 	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="${color}" stroke="#fff" stroke-width="1"/></svg>`
 	const icon = nativeImage.createFromDataURL(
-		'data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64')
+		`data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`
 	)
 	tray.setImage(icon)
 }

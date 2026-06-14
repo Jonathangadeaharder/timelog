@@ -1,7 +1,7 @@
+import { type ChildProcess, spawn } from 'node:child_process'
+import path from 'node:path'
 import { app, BrowserWindow } from 'electron'
 import { autoUpdater } from 'electron-updater'
-import { spawn, type ChildProcess } from 'node:child_process'
-import path from 'node:path'
 import { createTray } from './tray'
 
 let mainWindow: BrowserWindow | null = null
@@ -28,9 +28,9 @@ function startServer(): Promise<void> {
 				PORT: String(SERVER_PORT),
 				NODE_ENV: 'production',
 				ORIGIN: SERVER_URL,
-				DATA_DIR: dataDir,
+				DATA_DIR: dataDir
 			},
-			stdio: ['pipe', 'pipe', 'pipe'],
+			stdio: ['pipe', 'pipe', 'pipe']
 		})
 
 		let pollInterval: ReturnType<typeof setInterval> | null = null
@@ -97,9 +97,9 @@ function createWindow() {
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			contextIsolation: true,
-			nodeIntegration: false,
+			nodeIntegration: false
 		},
-		show: false,
+		show: false
 	})
 
 	mainWindow.once('ready-to-show', () => {
@@ -152,9 +152,12 @@ app.whenReady().then(async () => {
 		autoUpdater.autoDownload = true
 		autoUpdater.autoInstallOnAppQuit = true
 		autoUpdater.checkForUpdates()
-		setInterval(() => {
-			autoUpdater.checkForUpdates()
-		}, 4 * 60 * 60 * 1000)
+		setInterval(
+			() => {
+				autoUpdater.checkForUpdates()
+			},
+			4 * 60 * 60 * 1000
+		)
 	}
 
 	app.on('activate', () => {
