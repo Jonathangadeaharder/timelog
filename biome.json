@@ -1,6 +1,6 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"assist": { "enabled": true, "actions": { "source": { "organizeImports": "on" } } },
 	"files": {
 		"includes": [
 			"**",
@@ -31,8 +31,7 @@
 				"noNonNullAssertion": "off"
 			},
 			"suspicious": {
-				"noExplicitAny": "warn",
-				"noUnknownAtRules": "off"
+				"noExplicitAny": "warn"
 			},
 			"a11y": {
 				"noStaticElementInteractions": "off",
@@ -61,6 +60,9 @@
 			"includes": ["**/*.css"],
 			"linter": {
 				"rules": {
+					"suspicious": {
+						"noUnknownAtRules": "off"
+					},
 					"complexity": {
 						"noImportantStyles": "off"
 					}
