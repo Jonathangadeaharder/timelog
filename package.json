@@ -16,6 +16,7 @@
 		"lint": "biome check .",
 		"format": "biome format --write .",
 		"test": "vitest run",
+		"test:coverage": "vitest run --coverage",
 		"test:watch": "vitest",
 		"test:e2e": "playwright test",
 		"db:generate": "drizzle-kit generate",
