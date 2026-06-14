@@ -1,0 +1,25 @@
+appId: com.jonathan.timelog
+productName: Timelog
+directories:
+  buildResources: electron/resources
+  output: dist-electron
+files:
+  - electron/**/*
+  - build/**/*
+extraResources:
+  - from: build
+    to: server
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch:
+        - arm64
+  hardenedRuntime: true
+  gatekeeperAssess: false
+dmg:
+  sign: false
+publish:
+  provider: github
+  owner: Jonathangadeaharder
+  repo: timelog
