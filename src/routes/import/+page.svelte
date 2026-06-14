@@ -1,4 +1,6 @@
 <script lang="ts">
+import { enhance } from '$app/forms'
+
 interface ImportResult {
 	projectsCreated: number
 	entriesImported: number

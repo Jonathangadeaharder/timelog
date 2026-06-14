@@ -1,4 +1,6 @@
 <script lang="ts">
+import { enhance } from '$app/forms'
+
 interface Props {
 	data: {
 		settings: Record<string, string>
@@ -14,15 +16,15 @@ let speechEnergy = $state(Number(data.settings.speechEnergy ?? '800'))
 let theme = $state(data.settings.theme ?? 'dark')
 let accent = $state(data.settings.accent ?? 'cyan')
 
-const _accents = ['cyan', 'violet', 'amber', 'emerald'] as const
-const _accentColors: Record<string, string> = {
+const accents = ['cyan', 'violet', 'amber', 'emerald'] as const
+const accentColors: Record<string, string> = {
 	cyan: 'hsl(195 40% 55%)',
 	violet: 'hsl(268 50% 65%)',
 	amber: 'hsl(38 75% 60%)',
 	emerald: 'hsl(158 45% 55%)'
 }
 
-function _fmtSeconds(s: number): string {
+function fmtSeconds(s: number): string {
 	const m = Math.floor(s / 60)
 	const sec = s % 60
 	return sec > 0 ? `${m}m ${sec}s` : `${m}m`

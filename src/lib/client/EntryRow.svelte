@@ -16,10 +16,10 @@ interface Props {
 
 let { entry }: Props = $props()
 
-const _startStr = $derived(fmtIso(new Date(entry.start)))
-const _endStr = $derived(entry.end ? fmtIso(new Date(entry.end)) : null)
-const _duration = $derived(fmtHm(entry.seconds))
-const _running = $derived(entry.end === null)
+const startStr = $derived(fmtIso(new Date(entry.start)))
+const endStr = $derived(entry.end ? fmtIso(new Date(entry.end)) : null)
+const duration = $derived(fmtHm(entry.seconds))
+const running = $derived(entry.end === null)
 </script>
 
 <div class="entry-row" class:running>

@@ -1,4 +1,5 @@
 <script lang="ts">
+import EntryRow from '$lib/client/EntryRow.svelte'
 import { fmtHm } from '$lib/shared/format'
 
 interface ProjectTotal {
@@ -30,8 +31,8 @@ interface Props {
 
 let { data }: Props = $props()
 
-const _totalHm = $derived(fmtHm(data.totalSeconds))
-const _maxProjectSeconds = $derived(
+const totalHm = $derived(fmtHm(data.totalSeconds))
+const maxProjectSeconds = $derived(
 	data.projectTotals.length > 0 ? (data.projectTotals[0]?.totalSeconds ?? 0) : 0
 )
 </script>

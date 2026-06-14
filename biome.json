@@ -46,6 +46,14 @@
 	},
 	"overrides": [
 		{
+			"includes": ["**/*.svelte"],
+			"linter": {
+				"rules": {
+					"preset": "none"
+				}
+			}
+		},
+		{
 			"includes": ["**/*.css"],
 			"linter": {
 				"rules": {

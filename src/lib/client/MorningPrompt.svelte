@@ -20,7 +20,7 @@ let { projects, onstart }: Props = $props()
 let selectedProjectId = $state<number | null>(null)
 let task = $state('')
 
-function _handleStart() {
+function handleStart() {
 	const project = projects.find((p) => p.id === selectedProjectId)
 	if (!project) return
 

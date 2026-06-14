@@ -1,4 +1,5 @@
 <script lang="ts">
+import { fmtHm } from '$lib/shared/format'
 import { pickWellness } from '$lib/shared/wellness'
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 
 let { elapsedSeconds, currentTask, currentProject, oncontinue, onswitch }: Props = $props()
 
-let _tip = $state(pickWellness())
+let tip = $state(pickWellness())
 </script>
 
 <div class="overlay" role="dialog" aria-modal="true" aria-label="Check-in">
