@@ -22,7 +22,7 @@
 		"test:e2e": "playwright test",
 		"electron:dev": "concurrently \"pnpm dev\" \"wait-on http://localhost:5173 && electron .\"",
 		"electron:build": "pnpm build && tsc -p electron/tsconfig.json && electron-builder --mac",
-		"electron:preview": "electron .",
+		"electron:preview": "tsc -p electron/tsconfig.json && electron .",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "tsx ./src/lib/server/db/migrate.ts"
 	},
