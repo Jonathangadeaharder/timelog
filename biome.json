@@ -8,7 +8,8 @@
 			"!**/.svelte-kit",
 			"!**/node_modules",
 			"!**/drizzle",
-			"!**/.venv"
+			"!**/.venv",
+			"!**/.superpowers"
 		],
 		"ignoreUnknown": true
 	},
@@ -28,6 +29,11 @@
 			"suspicious": {
 				"noExplicitAny": "warn",
 				"noUnknownAtRules": "off"
+			},
+			"a11y": {
+				"noStaticElementInteractions": "off",
+				"useKeyWithClickEvents": "off",
+				"useButtonType": "off"
 			}
 		}
 	},

@@ -16,6 +16,7 @@
 		"lint": "biome check .",
 		"format": "biome format --write .",
 		"test": "vitest run",
+		"test:coverage": "vitest run --coverage",
 		"test:watch": "vitest",
 		"test:e2e": "playwright test",
 		"db:generate": "drizzle-kit generate",
@@ -30,7 +31,7 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
+		"@biomejs/biome": "^2.5.0",
 		"@playwright/test": "^1.60.0",
 		"@sveltejs/adapter-node": "^5.2.9",
 		"@sveltejs/kit": "^2.8.1",

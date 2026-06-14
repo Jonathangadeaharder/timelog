@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss'
 
 export default {
 	content: ['./src/**/*.{html,svelte,ts,js}'],
@@ -86,4 +86,4 @@ export default {
 		}
 	},
 	plugins: []
-} satisfies Config;
+} satisfies Config
