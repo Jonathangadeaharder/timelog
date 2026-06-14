@@ -19,8 +19,10 @@ function startServer(): Promise<void> {
 		const dataDir = path.join(app.getPath('userData'), 'data', 'timelog')
 
 		serverProcess = spawn(process.execPath, [serverPath], {
+			cwd: app.isPackaged ? path.join(process.resourcesPath, 'server') : path.join(__dirname, '..'),
 			env: {
 				...process.env,
+				ELECTRON_RUN_AS_NODE: '1',
 				HOST: '127.0.0.1',
 				PORT: String(SERVER_PORT),
 				NODE_ENV: 'production',
@@ -41,6 +43,12 @@ function startServer(): Promise<void> {
 		})
 
 		serverProcess.on('error', reject)
+
+		serverProcess.on('exit', (code) => {
+			if (code !== 0 && code !== null) {
+				reject(new Error(`Server exited with code ${code}`))
+			}
+		})
 
 		let attempts = 0
 		const interval = setInterval(async () => {
