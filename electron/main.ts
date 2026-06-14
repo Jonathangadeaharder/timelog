@@ -1,12 +1,8 @@
 import { app, BrowserWindow } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { spawn, type ChildProcess } from 'node:child_process'
-import { createRequire } from 'node:module'
 import path from 'node:path'
 import { createTray } from './tray'
-
-const require = createRequire(import.meta.url)
-const __dirname = path.dirname(require.resolve('../package.json'))
 
 let mainWindow: BrowserWindow | null = null
 let serverProcess: ChildProcess | null = null
