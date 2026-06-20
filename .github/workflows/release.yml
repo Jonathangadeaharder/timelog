@@ -26,13 +26,28 @@ jobs:
       - name: Build SvelteKit
         run: pnpm build
 
+      - name: Import Apple Developer Certificate
+        if: env.APPLE_DEV_ID
+        env:
+          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+          CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$CERTIFICATE_BASE64" | base64 --decode > /tmp/certificate.p12
+          security create-keychain -p actions /tmp/build.keychain
+          security import /tmp/certificate.p12 -P "$CERTIFICATE_PASSWORD" -A -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -k actions /tmp/build.keychain
+          rm -f /tmp/certificate.p12
+
       - name: Build Electron
         run: pnpm run electron:build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload artifacts
-        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        uses: softprops/action-gh-release@c95fe1489396c3d3a69a4c7831bc416a3b7e739d # v2
         with:
           files: |
             dist-electron/*.dmg
