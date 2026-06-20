@@ -2,7 +2,7 @@ name: Required Checks (PR)
 
 on:
   pull_request:
-    branches: [main]
+    branches: [feature/sveltekit-rebuild]
 
 concurrency:
   group: pr-gate-${{ github.ref }}

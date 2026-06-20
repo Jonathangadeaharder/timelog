@@ -177,11 +177,6 @@
 		color: hsl(var(--state-warning));
 		border-color: hsl(var(--state-warning) / 0.3);
 	}
-	.badge-error {
-		background: hsl(var(--state-error-bg) / 0.5);
-		color: hsl(var(--state-error));
-		border-color: hsl(var(--state-error) / 0.3);
-	}
 	.badge-accent {
 		background: hsl(var(--accent) / 0.15);
 		color: hsl(var(--accent));
@@ -217,12 +212,6 @@
 		gap: 18px;
 		margin-bottom: 24px;
 	}
-	.section-head-num {
-		font-family: var(--font-mono);
-		font-size: 12px;
-		color: hsl(var(--text-disabled));
-		font-variant-numeric: tabular-nums;
-	}
 	.section-head-row {
 		display: flex;
 		align-items: baseline;
@@ -234,15 +223,6 @@
 		flex: 1;
 		height: 1px;
 		background: hsl(var(--border-subtle));
-	}
-}
-
-@layer utilities {
-	.font-display {
-		font-family: var(--font-display);
-	}
-	.no-scrollbar::-webkit-scrollbar {
-		display: none;
 	}
 }
 

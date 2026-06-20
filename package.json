@@ -32,8 +32,7 @@
 		"@fontsource-variable/geist-mono": "^5.1.0",
 		"@lucide/svelte": "^1.18.0",
 		"drizzle-orm": "^0.45.2",
-		"electron-updater": "^6.8.9",
-		"zod": "^3.23.8"
+		"electron-updater": "^6.8.9"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.0",
@@ -42,7 +41,6 @@
 		"@sveltejs/kit": "^2.8.1",
 		"@sveltejs/vite-plugin-svelte": "^5.1.1",
 		"@types/node": "^22.9.0",
-		"@types/semver": "^7.7.1",
 		"@vitest/coverage-v8": "^3.2.6",
 		"autoprefixer": "^10.4.20",
 		"concurrently": "^10.0.3",

@@ -2,7 +2,7 @@ name: Merge Gate
 
 on:
   pull_request:
-    branches: [main]
+    branches: [feature/sveltekit-rebuild]
     types: [opened, synchronize, reopened]
 
 concurrency:

@@ -168,11 +168,4 @@ export class TimerService {
 	}
 }
 
-let _timer: TimerService | null = null
-
-export function getTimer(): TimerService {
-	if (!_timer) _timer = new TimerService()
-	return _timer
-}
-
 export const timer = new TimerService()
