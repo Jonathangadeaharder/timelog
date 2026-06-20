@@ -38,10 +38,8 @@ mac:
     - target: dmg
       arch:
         - arm64
-  hardenedRuntime: true
+  hardenedRuntime: false
   gatekeeperAssess: false
-  identity: ${APPLE_DEV_ID}
-  notarize: false
 dmg:
   sign: false
 publish:
