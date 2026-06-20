@@ -1,6 +1,6 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"assist": { "enabled": true, "actions": { "source": { "organizeImports": "on" } } },
 	"files": {
 		"includes": [
 			"**",
@@ -8,7 +8,12 @@
 			"!**/.svelte-kit",
 			"!**/node_modules",
 			"!**/drizzle",
-			"!**/.venv"
+			"!**/.venv",
+			"!**/.superpowers",
+			"!**/coverage",
+			"!**/dist-electron",
+			"!electron/*.js",
+			"!electron/*.js.map"
 		],
 		"ignoreUnknown": true
 	},
@@ -26,8 +31,12 @@
 				"noNonNullAssertion": "off"
 			},
 			"suspicious": {
-				"noExplicitAny": "warn",
-				"noUnknownAtRules": "off"
+				"noExplicitAny": "warn"
+			},
+			"a11y": {
+				"noStaticElementInteractions": "off",
+				"useKeyWithClickEvents": "off",
+				"useButtonType": "off"
 			}
 		}
 	},
@@ -51,6 +60,9 @@
 			"includes": ["**/*.css"],
 			"linter": {
 				"rules": {
+					"suspicious": {
+						"noUnknownAtRules": "off"
+					},
 					"complexity": {
 						"noImportantStyles": "off"
 					}

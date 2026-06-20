@@ -170,7 +170,10 @@ describe('MicEngine', () => {
 	})
 
 	it('triggers onSilence callback when silence threshold is exceeded', async () => {
-		vi.useFakeTimers()
+		vi.useFakeTimers({
+			shouldAdvanceTime: true,
+			toFake: ['Date', 'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval']
+		})
 		const onSilence = vi.fn()
 		const engine = new MicEngine({ silenceThreshold: 100, speechEnergy: 0.01 })
 		engine.onSilence = onSilence
@@ -192,7 +195,10 @@ describe('MicEngine', () => {
 	})
 
 	it('does not trigger onSilence twice for the same silence period', async () => {
-		vi.useFakeTimers()
+		vi.useFakeTimers({
+			shouldAdvanceTime: true,
+			toFake: ['Date', 'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval']
+		})
 		const onSilence = vi.fn()
 		const engine = new MicEngine({ silenceThreshold: 100, speechEnergy: 0.01 })
 		engine.onSilence = onSilence
@@ -218,7 +224,10 @@ describe('MicEngine', () => {
 	})
 
 	it('resets silence notification after speech resumes', async () => {
-		vi.useFakeTimers()
+		vi.useFakeTimers({
+			shouldAdvanceTime: true,
+			toFake: ['Date', 'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval']
+		})
 		const onSilence = vi.fn()
 		const engine = new MicEngine({ silenceThreshold: 100, speechEnergy: 0.01 })
 		engine.onSilence = onSilence
@@ -247,7 +256,10 @@ describe('MicEngine', () => {
 	})
 
 	it('triggers onCheckin callback when checkin interval is exceeded', async () => {
-		vi.useFakeTimers()
+		vi.useFakeTimers({
+			shouldAdvanceTime: true,
+			toFake: ['Date', 'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval']
+		})
 		const onCheckin = vi.fn()
 		const engine = new MicEngine({ checkinInterval: 200, speechEnergy: 0.01 })
 		engine.onCheckin = onCheckin

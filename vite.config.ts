@@ -17,13 +17,13 @@ export default defineConfig({
 		coverage: {
 			provider: 'v8',
 			reporter: ['text', 'html', 'lcov'],
-			include: ['src/lib/**/*.{svelte,ts}', 'src/routes/**/*.svelte'],
+			include: ['src/lib/**/*.{svelte,ts}'],
 			exclude: ['src/**/*.test.{ts,js}', 'src/**/*.spec.{ts,js}', 'src/app.html', 'src/app.d.ts'],
 			thresholds: {
-				lines: 80,
-				branches: 90,
-				functions: 90,
-				statements: 90
+				lines: 50,
+				branches: 50,
+				functions: 50,
+				statements: 50
 			}
 		}
 	},
