@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build SvelteKit
+        run: pnpm build
+
+      - name: Import Apple Developer Certificate
+        if: env.APPLE_DEV_ID
+        env:
+          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+          CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$CERTIFICATE_BASE64" | base64 --decode > /tmp/certificate.p12
+          security create-keychain -p actions /tmp/build.keychain
+          security import /tmp/certificate.p12 -P "$CERTIFICATE_PASSWORD" -A -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -k actions /tmp/build.keychain
+          rm -f /tmp/certificate.p12
+
+      - name: Build Electron
+        run: pnpm run electron:build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Upload artifacts
+        uses: softprops/action-gh-release@c95fe1489396c3d3a69a4c7831bc416a3b7e739d # v2
+        with:
+          files: |
+            dist-electron/*.dmg
+            dist-electron/latest-mac.yml

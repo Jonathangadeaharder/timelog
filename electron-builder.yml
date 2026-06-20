@@ -1,0 +1,50 @@
+appId: com.jonathan.timelog
+productName: Timelog
+directories:
+  buildResources: electron/resources
+  output: dist-electron
+files:
+  - electron/**/*
+  - build/**/*
+extraResources:
+  - from: build
+    to: server
+  - from: electron/server-package.json
+    to: server/package.json
+  - from: node_modules
+    to: server/node_modules
+    filter:
+      - "**/*"
+      - "!**/@biomejs/**"
+      - "!**/electron/**"
+      - "!**/electron-builder/**"
+      - "!**/playwright/**"
+      - "!**/vitest/**"
+      - "!**/@vitest/**"
+      - "!**/svelte-check/**"
+      - "!**/@sveltejs/vite-plugin-svelte/**"
+      - "!**/autoprefixer/**"
+      - "!**/postcss/**"
+      - "!**/tailwindcss/**"
+      - "!**/vite/**"
+      - "!**/jsdom/**"
+      - "!**/tsx/**"
+      - "!**/drizzle-kit/**"
+  - from: drizzle
+    to: server/drizzle
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch:
+        - arm64
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  identity: ${APPLE_DEV_ID}
+  notarize: false
+dmg:
+  sign: false
+publish:
+  provider: github
+  owner: Jonathangadeaharder
+  repo: timelog
