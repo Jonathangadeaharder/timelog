@@ -1,49 +1,62 @@
 name: Merge Gate
 
 on:
-  pull_request:
-    branches: [feature/sveltekit-rebuild]
-    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: merge-gate-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   pr-gate:
     uses: ./.github/workflows/pr-gate.yml
 
   codeql:
-    runs-on: ubuntu-latest
+    name: CodeQL Security
+    runs-on: [self-hosted, macOS, ARM64]
     needs: pr-gate
     permissions:
-      security-events: write
       actions: read
+      contents: read
+      security-events: write
+    strategy:
+      matrix:
+        language: [python, javascript-typescript]
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@v4
 
       - uses: github/codeql-action/init@v3
         with:
-          languages: javascript-typescript
+          languages: ${{ matrix.language }}
+
+      - uses: github/codeql-action/autobuild@v3
 
       - uses: github/codeql-action/analyze@v3
 
   e2e:
-    runs-on: ubuntu-latest
+    name: E2E Tests
+    runs-on: [self-hosted, macOS, ARM64]
     needs: pr-gate
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm exec playwright install --with-deps
+      - run: pnpm exec playwright install
 
       - name: Build
         run: pnpm run build
@@ -51,14 +64,38 @@ jobs:
       - name: E2E Tests
         run: pnpm run test:e2e
 
+  sonarcloud:
+    name: SonarCloud Code Analysis
+    runs-on: [self-hosted, macOS, ARM64]
+    needs: pr-gate
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install SonarScanner
+        run: brew install sonar-scanner
+      - name: SonarCloud Scan
+        run: sonar-scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   merge-ok:
-    runs-on: ubuntu-latest
-    needs: [pr-gate, codeql, e2e]
+    name: Merge Gate
+    runs-on: [self-hosted, macOS, ARM64]
+    needs: [pr-gate, codeql, e2e, sonarcloud]
     if: always()
     steps:
       - name: Check all gates passed
         run: |
-          if [[ "${{ needs.pr-gate.result }}" != "success" || "${{ needs.codeql.result }}" != "success" || "${{ needs.e2e.result }}" != "success" ]]; then
+          FAILED=0
+          [ "${{ needs.pr-gate.result }}" != "success" ] && FAILED=1
+          [ "${{ needs.codeql.result }}" != "success" ] && FAILED=1
+          [ "${{ needs.e2e.result }}" != "success" ] && FAILED=1
+          if [ "${{ needs.sonarcloud.result }}" != "success" ] && [ "${{ needs.sonarcloud.result }}" != "skipped" ]; then
+            FAILED=1
+          fi
+          if [ "$FAILED" -eq 1 ]; then
             echo "One or more gates failed"
             exit 1
           fi
+          echo "All merge gate jobs passed."

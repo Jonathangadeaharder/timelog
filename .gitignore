@@ -4,9 +4,11 @@ __pycache__/
 dist/
 wheels/
 *.egg-info
+timelog.egg-info/
 
 # Virtual environments
 .venv
+.venv/
 
 # SvelteKit
 /build/
@@ -30,8 +32,22 @@ wheels/
 .DS_Store
 Thumbs.db
 
+# Mutation testing artifacts
+mutants/
+.mutmut-cache
+
+# Coverage reports
+coverage.xml
+.coverage
+.coverage.*
+
+# Cache directories
+.ruff_cache/
+.pytest_cache/
+
 # Superpowers
 .superpowers/
+
 # Electron build output
 dist-electron/
 electron/*.js

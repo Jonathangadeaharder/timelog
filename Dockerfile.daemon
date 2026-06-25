@@ -1,0 +1,15 @@
+FROM python:3.14-slim AS runner
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    libportaudio2 \
+    portaudio19-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
+COPY main.py daemon.py ./
+ENV PATH="/app/.venv/bin:${PATH}"
+CMD ["python", "main.py", "daemon", "start"]

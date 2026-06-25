@@ -1,0 +1,10 @@
+**/node_modules
+**/.venv
+**/.svelte-kit
+**/.git
+**/.DS_Store
+**/dist
+**/build
+**/data
+**/output
+**/models

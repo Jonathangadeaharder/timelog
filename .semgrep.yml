@@ -1,0 +1,44 @@
+rules:
+  - id: no-hardcoded-secrets
+    pattern-either:
+      - pattern: $SECRET = "..."
+      - pattern: password = "..."
+      - pattern: api_key = "..."
+    severity: WARNING
+    languages:
+      - python
+    message: Avoid hardcoding secrets in source code.
+
+  - id: no-assert-in-non-test
+    pattern: assert $CONDITION
+    severity: WARNING
+    languages:
+      - python
+    paths:
+      exclude:
+        - "tests/"
+        - "test_*.py"
+    message: assert should only be used in test files.
+
+  - id: no-eval
+    pattern: eval($ARG)
+    severity: ERROR
+    languages:
+      - python
+    message: eval() is dangerous. Avoid using it.
+
+  - id: no-subprocess-shell-true
+    pattern: subprocess.$CALL(..., shell=True, ...)
+    severity: WARNING
+    languages:
+      - python
+    message: Avoid shell=True in subprocess calls.
+
+  - id: no-tmpfile-injection
+    pattern-either:
+      - pattern: open($ARG, "w")
+      - pattern: open($ARG, "r")
+    severity: WARNING
+    languages:
+      - python
+    message: Ensure file paths are sanitized.

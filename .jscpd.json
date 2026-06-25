@@ -1,0 +1,18 @@
+{
+  "minLines": 10,
+  "maxLines": 500,
+  "threshold": 0.1,
+  "minTokens": 50,
+  "ignore": [
+    ".git/**",
+    ".venv/**",
+    "node_modules/**",
+    "tests/**",
+    "*.min.*"
+  ],
+  "languages": {
+    "python": {
+      "type": "python"
+    }
+  }
+}

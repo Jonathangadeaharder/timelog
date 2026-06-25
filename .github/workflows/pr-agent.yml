@@ -4,10 +4,15 @@ on:
   issue_comment:
     types: [created, edited]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   pr-agent:
-    runs-on: self-hosted
     if: vars.ENABLE_PR_AGENT == 'true' && github.event.issue.pull_request != null
+    runs-on: [self-hosted, macOS, ARM64]
     steps:
       - uses: actions/checkout@v4
 

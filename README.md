@@ -16,46 +16,35 @@ uv sync
 ### Manual mode — you control it
 
 ```bash
-# Start tracking (project + optional task)
-uv run python main.py start backend "fix auth bug"
+uv run timelog start backend "fix auth bug"
 
-# See what you're tracking right now
-uv run python main.py now
+uv run timelog now
 
-# Stop and log the entry
-uv run python main.py stop
+uv run timelog stop
 
-# View today's entries (default)
-uv run python main.py log
+uv run timelog log
 
-# View this week / all time
-uv run python main.py log --week
-uv run python main.py log --all
+uv run timelog log --week
+uv run timelog log --all
 
-# Project summary (today, this week, all time)
-uv run python main.py report
+uv run timelog report
 
-# Filter to one project
-uv run python main.py report backend
+uv run timelog report backend
 
-# Export entries
-uv run python main.py export csv -o timesheet.csv
-uv run python main.py export json
+uv run timelog export csv -o timesheet.csv
+uv run timelog export json
 ```
 
-### Daemon mode — it controls itself 🤖
+### Daemon mode — it controls itself
 
 The daemon monitors your mic for speech activity and auto-manages time tracking:
 
 ```bash
-# Start the daemon (uses defaults: 5 min silence, 30 min check-ins)
-uv run python main.py daemon start
+uv run timelog daemon start
 
-# Customise thresholds
-uv run python main.py daemon start --silence 240 --checkin 900
+uv run timelog daemon start --silence 240 --checkin 900
 
-# Check mic is available
-uv run python main.py daemon check
+uv run timelog daemon check
 ```
 
 #### How it works:
@@ -70,7 +59,7 @@ uv run python main.py daemon check
 #### Check-in example:
 
 ```
-⏰ Check-in — 💧 Grab a glass of water
+Check-in — Grab a glass of water
    Currently: backend (01:23:45)
    Press [Enter] to continue, or type new task> 
 ```
@@ -94,6 +83,7 @@ uv run python main.py daemon check
 |---------|-------------|
 | `daemon start` | Start the speech-detection daemon |
 | `daemon check` | Verify microphone is available |
+| `daemon status` | Show current daemon state |
 
 ### Daemon options
 
@@ -102,7 +92,10 @@ uv run python main.py daemon check
 | `--silence, -s` | 300 (5 min) | Silence duration before prompting |
 | `--energy, -e` | 800 | Minimum RMS energy to detect speech |
 | `--checkin, -c` | 1800 (30 min) | Interval between wellness check-ins |
+| `--headless` | off | Run without initial prompt (for background daemons) |
 
 ## Storage
 
-Entries are stored as JSON in `~/.local/share/timelog/entries.json`.
+Entries are stored as JSON in the XDG application data directory (resolved via `click.get_app_dir("timelog")`):
+- **macOS**: `~/Library/Application Support/timelog/entries.json`
+- **Linux**: `~/.local/share/timelog/entries.json`
